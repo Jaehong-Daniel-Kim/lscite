@@ -15,7 +15,7 @@ class CustomUserManager(BaseUserManager):
                 validate_email(email)
             except ValidationError as e:
                 raise ValueError("Invalid Email Address") from e
-            email_instance, created = UserMail.objects.get_or_create(email=email)
+            email_instance, created = UserEmail.objects.get_or_create(email=email)
             user = self.model(username=username, email=email_instance, **extra_fields)
         else:
             user = self.model(username=username, **extra_fields)
@@ -35,7 +35,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, password, **extra_fields)
 
 
-class UserMail(CommonModel):
+class UserEmail(CommonModel):
 
     class Meta:
         db_table = "user_email"
@@ -80,7 +80,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     avatar = models.ImageField(upload_to="avatars", blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
     language = models.CharField(max_length=2, choices=LanguageChoices.choices, )
-    email = models.OneToOneField("users.UserMail",
+    email = models.OneToOneField("users.UserEmail",
                                  on_delete=models.CASCADE,
                                  related_name="users",
                                  null=True,

@@ -31,11 +31,11 @@ class OutMail(CommonModel):
         FAIL = ("fail", "Fail")
         SUCCESS = ("sent", "Sent")
 
-    sender = models.ForeignKey("users.UserMail",
+    sender = models.ForeignKey("users.UserEmail",
                                related_name="out_mail",
                                on_delete=models.SET_NULL,
                                null=True, )
-    recipient = models.ManyToManyField("users.UserMail")
+    recipient = models.ManyToManyField("users.UserEmail")
     subject = models.CharField(max_length=150)
     mail_body = models.ForeignKey("mails.MailBody",
                                   related_name="out_mail",
@@ -61,10 +61,10 @@ class InMail(CommonModel):
         READ = ("read", "Read")
         UNREAD = ("unread", "Unread")
 
-    sender = models.ForeignKey("users.UserMail",
+    sender = models.ForeignKey("users.UserEmail",
                                on_delete=models.SET_NULL,
                                null=True, )
-    recipient = models.ManyToManyField("users.UserMail",
+    recipient = models.ManyToManyField("users.UserEmail",
                                        related_name="in_mail")
     subject = models.CharField(max_length=150)
     mail_body = models.ForeignKey("mails.MailBody",
