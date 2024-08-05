@@ -19,6 +19,9 @@ class MailBody(CommonModel):
 
     mail_body = models.TextField()
 
+    def __str__(self):
+        return self.mail_body[:50]
+
 
 class OutMail(CommonModel):
 

@@ -6,4 +6,8 @@ from .models import PostBox
 
 @admin.register(PostBox)
 class PostBoxAdmin(admin.ModelAdmin):
-    ...
+    list_display = (
+        "name",
+        "user",
+        "description",
+    )
