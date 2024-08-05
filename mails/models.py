@@ -4,28 +4,6 @@ from common.models import CommonModel
 # Create your models here.
 
 
-# class MailHeader(models.Model):
-#
-#     class Meta:
-#         abstract = True
-#
-#     sender = models.ForeignKey("users.UserMail",
-#                                related_name="%(class)s",
-#                                on_delete=models.SET_NULL,
-#                                null=True, )
-#     recipient = models.ManyToManyField("users.UserMail",
-#                                        related_name="%(class)s")
-#     subject = models.CharField(max_length=150)
-#     mail_body = models.ForeignKey("mails.MailBody",
-#                                   related_name="%(class)s",
-#                                   on_delete=models.SET_NULL,
-#                                   null=True, )
-#     mail_attachment = models.ForeignKey("mails.MailAttachment",
-#                                         related_name="%(class)s",
-#                                         on_delete=models.SET_NULL,
-#                                         null=True, )
-#
-
 class MailAttachment(CommonModel):
 
     class Meta:
@@ -102,6 +80,8 @@ class InMail(CommonModel):
     status = models.CharField(choices=StatusChoices.choices,
                               max_length=6,
                               default="unread", )
+    mail_box = models.ManyToManyField("postboxes.PostBox",
+                                      related_name="in_mail")
 
 
 

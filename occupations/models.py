@@ -11,6 +11,9 @@ class Company(CommonModel):
 
     name = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.name
+
 
 class Department(CommonModel):
 
@@ -22,20 +25,8 @@ class Department(CommonModel):
         Dept2 = ("dept2", "Dept2")
 
     department = models.CharField(max_length=5, choices=DepartmentChoice)
-    group = models.CharField(max_length=5)
-    team = models.CharField(max_length=5)
+    group = models.CharField(max_length=50)
+    team = models.CharField(max_length=50)
 
-
-class Occupation(CommonModel):
-
-    class Meta:
-        db_table = "occupations"
-
-    company = models.ForeignKey("occupations.Company",
-                                related_name="occupations",
-                                on_delete=models.SET_NULL,
-                                null=True, )
-    department = models.ForeignKey("occupations.Department",
-                                   related_name="occupations",
-                                   on_delete=models.SET_NULL,
-                                   null=True, )
+    def __str__(self):
+        return f"{self.department}|{self.group}|{self.team}"

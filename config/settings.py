@@ -43,7 +43,7 @@ CUSTOM_APP = [
     'mails.apps.MailConfig',
     'common.apps.CommonConfig',
     'occupations.apps.OccupationConfig',
-    'postboxs.apps.PostboxConfig',
+    'postboxes.apps.PostboxConfig',
     'users.apps.UserConfig',
 ]
 
@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
