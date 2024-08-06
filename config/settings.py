@@ -40,7 +40,7 @@ SYSTEM_APP = [
 ]
 
 CUSTOM_APP = [
-    'mails.apps.MailConfig',
+    'emails.apps.MailConfig',
     'common.apps.CommonConfig',
     'occupations.apps.OccupationConfig',
     'postboxes.apps.PostboxConfig',
@@ -134,3 +134,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Custom Auth Model
 AUTH_USER_MODEL = 'users.User'
+
+# Media Root
+MEDIA_ROOT = "uploads/"

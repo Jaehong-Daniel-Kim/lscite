@@ -5,7 +5,16 @@ from common.models import CommonModel
 # Create your models here.
 
 
-class PostBox(CommonModel):
+class Postbox(CommonModel):
+    """
+    Many-to-one
+        : user = users.User
+            One User object can be associated with many Postbox,
+            but one Postbox can only have one User Object.
+
+    Reverse Accessor
+        : self.emails -> emails.Email
+    """
 
     class Meta:
         db_table = "postboxes"
@@ -19,6 +28,11 @@ class PostBox(CommonModel):
     user = models.ForeignKey("users.User",
                              on_delete=models.CASCADE,
                              related_name="postbox")
+
+    # === Custom Fields
+
+    def total_mails(self):
+        return self.emails.count()
 
     def __str__(self):
         return self.name

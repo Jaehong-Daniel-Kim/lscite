@@ -5,9 +5,15 @@ from common.models import CommonModel
 
 
 class Company(CommonModel):
+    """
+    Reverse Accessor
+        : self.users -> users.User
+
+    """
 
     class Meta:
-        db_table = "Company"
+        db_table = "companies"
+        verbose_name_plural = "companies"
 
     name = models.CharField(max_length=20)
 
@@ -16,6 +22,11 @@ class Company(CommonModel):
 
 
 class Department(CommonModel):
+    """
+    Reverse Accessor
+        : self.users - users.User
+
+    """
 
     class Meta:
         db_table = "departments"

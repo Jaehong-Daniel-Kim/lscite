@@ -10,12 +10,14 @@ from common.models import CommonModel
 class CustomUserManager(BaseUserManager):
 
     def create_user(self, username, password=None, **extra_fields):
+        # if not email:
+        #     raise ValueError("Email is required")
         if email := extra_fields.get("email"):
             try:
                 validate_email(email)
             except ValidationError as e:
                 raise ValueError("Invalid Email Address") from e
-            email_instance, created = UserEmail.objects.get_or_create(email=email)
+            email_instance, created = User.objects.get_or_create(email=email)
             user = self.model(username=username, email=email_instance, **extra_fields)
         else:
             user = self.model(username=username, **extra_fields)
@@ -35,24 +37,39 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, password, **extra_fields)
 
 
-class UserEmail(CommonModel):
+class EmailAddress(CommonModel):
 
     class Meta:
-        db_table = "user_email"
+        db_table = "user_email_addresses"
 
-    email = models.EmailField(unique=True)
+    user = models.ForeignKey("users.User",
+                             on_delete=models.CASCADE,
+                             related_name="emails")
+    email = models.EmailField(unique=True,
+                              help_text="Required. 254 characters or fewer in [email@domain.com] format",
+                              error_messages={"unique": "A user with that email address already exists"})
 
     def __str__(self):
         return self.email
 
-    def strip(self):
-        return self.email.strip()
-
 
 class User(AbstractBaseUser, PermissionsMixin):
 
+    """
+    Many-to-one
+        : company = occupations.Company
+            One Company object can be associated with many User objects,
+            but one User can only have one Company object.
+        : department = occupations.Department
+            One Department object can be associated with many User objects,
+            but one User can only have one Department object.
+
+    Reverse Accessor
+        : self.emails -> users.EmailAddress
+    """
+
     class Meta:
-        db_table = "user_account"
+        db_table = "user_accounts"
 
     class LanguageChoices(models.TextChoices):
         """ Choices for gender field """
@@ -80,11 +97,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     avatar = models.ImageField(upload_to="avatars", blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
     language = models.CharField(max_length=2, choices=LanguageChoices.choices, )
-    email = models.OneToOneField("users.UserEmail",
-                                 on_delete=models.CASCADE,
-                                 related_name="users",
-                                 null=True,
-                                 blank=False,)
     company = models.ForeignKey("occupations.Company",
                                 related_name="users",
                                 on_delete=models.SET_NULL,
