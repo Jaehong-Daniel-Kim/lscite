@@ -40,11 +40,12 @@ SYSTEM_APP = [
 ]
 
 CUSTOM_APP = [
-    'emails.apps.MailConfig',
+    'emails.apps.EmailConfig',
     'common.apps.CommonConfig',
-    'occupations.apps.OccupationConfig',
-    'postboxes.apps.PostboxConfig',
-    'users.apps.UserConfig',
+    'occupations.apps.OccupationsConfig',
+    'postboxes.apps.PostboxesConfig',
+    'users.apps.UsersConfig',
+    "contacts.apps.ContactsConfig",
 ]
 
 INSTALLED_APPS = SYSTEM_APP + CUSTOM_APP
