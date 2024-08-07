@@ -48,7 +48,11 @@ CUSTOM_APP = [
     "contacts.apps.ContactsConfig",
 ]
 
-INSTALLED_APPS = SYSTEM_APP + CUSTOM_APP
+THIRD_PARTY = [
+    "rest_framework",
+]
+
+INSTALLED_APPS = SYSTEM_APP + CUSTOM_APP + THIRD_PARTY
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
