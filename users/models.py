@@ -96,7 +96,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                                 )
     avatar = models.ImageField(upload_to="avatars", blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
-    language = models.CharField(max_length=2, choices=LanguageChoices.choices, )
+    language = models.CharField(max_length=2, choices=LanguageChoices.choices, default="en")
     company = models.ForeignKey("occupations.Company",
                                 related_name="users",
                                 on_delete=models.SET_NULL,
@@ -111,7 +111,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "username"
     EMAIL_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name", "phone", "language"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "phone"]
 
     def get_full_name(self):
         """

@@ -142,3 +142,10 @@ AUTH_USER_MODEL = 'users.User'
 
 # Media Root
 MEDIA_ROOT = "uploads/"
+
+
+# TODO:
+#  1. Users model needs to have "직급"
+#  2. Separate "SECRETE KEY" from config file
+
+
