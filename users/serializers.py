@@ -5,6 +5,17 @@ from rest_framework import serializers
 from occupations.serializers import DepartmentSerializer, CompanySerializere
 
 
+class TinyUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "avatar",
+            "first_name",
+            "last_name",
+            "username"
+        )
+
+
 class CreateOrUpdateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
