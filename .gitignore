@@ -181,3 +181,6 @@ idea/
 # MEDIA_ROOT
 uploads/
 
+
+# FRONTEND
+frontend/package-lock.json
