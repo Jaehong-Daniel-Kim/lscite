@@ -41,7 +41,6 @@ class EmailAttachment(CommonModel):
         : email = emails.Email
             One Email object can be associated with many Attachment objects,
             but one Attachment object can only have one Mail Object.
-
     """
 
     class Meta:
@@ -55,6 +54,9 @@ class EmailAttachment(CommonModel):
 
     def __str__(self):
         return self.file.name
+
+    def filename(self):
+        return self.file.name.split("/")[-1]
 
 
 class Email(CommonModel):
@@ -83,7 +85,7 @@ class Email(CommonModel):
     mail_body = models.TextField()
     status = models.CharField(choices=StatusChoices.choices,
                               max_length=6,
-                              default="unread", )
+                              default="unread",)
     mail_box = models.ManyToManyField("postboxes.Postbox",
                                       related_name="emails")
 

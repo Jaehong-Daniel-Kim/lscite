@@ -22,7 +22,7 @@ api = "api/v1"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path(f"{api}/contacts/", include("contacts.urls")),
-    path(f"{api}/emails", include("emails.urls")),
+    path(f"{api}/emails/", include("emails.urls")),
     path(f"{api}/occupations", include("occupations.urls")),
     path(f"{api}/postboxes/", include("postboxes.urls")),
     path(f"{api}/users/", include("users.urls")),
