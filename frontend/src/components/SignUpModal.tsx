@@ -1,5 +1,9 @@
 import {
-    Box, Button, Input, InputGroup, InputLeftElement,
+    Box,
+    Button,
+    Input,
+    InputGroup,
+    InputLeftElement,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -8,7 +12,7 @@ import {
     ModalOverlay,
     VStack
 } from "@chakra-ui/react";
-import {FaEnvelope, FaLock, FaUser, FaUserAlt, FaUserCheck} from "react-icons/fa";
+import {FaEnvelope, FaLock, FaUser, FaUserCheck} from "react-icons/fa";
 import SocialLogin from "./SocialLogin";
 import React from "react";
 
@@ -17,7 +21,7 @@ interface SignUpModalProps {
     onClose: () => void;
 }
 
-export default function SignUpModal({ isOpen, onClose }: SignUpModalProps) {
+export default function SignUpModal({isOpen, onClose}: SignUpModalProps) {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay/>

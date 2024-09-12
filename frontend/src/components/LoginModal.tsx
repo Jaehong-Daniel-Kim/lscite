@@ -10,7 +10,6 @@ import {
     ModalContent,
     ModalHeader,
     ModalOverlay,
-    useDisclosure,
     VStack
 } from "@chakra-ui/react";
 import {FaLock, FaUser} from "react-icons/fa";
@@ -22,7 +21,7 @@ interface LoginModalProps {
     onClose: () => void;
 }
 
-export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+export default function LoginModal({isOpen, onClose}: LoginModalProps) {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay/>
