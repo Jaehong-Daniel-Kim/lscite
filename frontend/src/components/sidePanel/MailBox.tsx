@@ -1,29 +1,48 @@
-import {Button, HStack, Text} from "@chakra-ui/react";
+import {Box, Button, HStack, IconButton, Text, Tooltip} from "@chakra-ui/react";
+import {BsDot} from "react-icons/bs";
 
 interface IMailBox {
     icon: any  // How to explicitly type react-icons
     name: string;
     mailCount: number;
+    isSm?: boolean;
 }
 
-export default function MailBox({icon, name, mailCount}: IMailBox) {
+export default function MailBox({icon, name, mailCount, isSm = false}: IMailBox) {
     return (
-        <HStack w={"100%"}>
-            <Button
-                w={"100%"}
-                justifyContent={"left"}
-                fontSize={"xl"}
-                leftIcon={icon}
-                variant={"ghost"}
-                colorScheme={"pink"}
-            >
-                <HStack w={"100%"} justifyContent={"space-between"}>
-                    <Text>{name}</Text>
-                    <HStack w={"10%"}>
-                        <Text>{mailCount? mailCount : null}</Text>
+        <Box w={"100%"}>
+            {
+                !isSm ? (
+                    <HStack w={"100%"}>
+                        <Button
+                            w={"100%"}
+                            justifyContent={"left"}
+                            fontSize={"xl"}
+                            leftIcon={icon}
+                            variant={"ghost"}
+                            colorScheme={"pink"}
+                        >
+                            <HStack w={"100%"} justifyContent={"space-between"}>
+                                <Text>{name}</Text>
+                                <HStack w={"10%"}>
+                                    <Text>{mailCount? mailCount : null}</Text>
+                                </HStack>
+                            </HStack>
+                        </Button>
                     </HStack>
-                </HStack>
-            </Button>
-        </HStack>
+                ) : (
+                    <Tooltip label={name}>
+                        <IconButton aria-label={name} colorScheme={"pink"}>
+                            {
+                                !icon? (
+                                    <Text>{mailCount}</Text>
+                                ) : (
+                                    <Box>{icon}</Box>
+                            )}
+                        </IconButton>
+                    </Tooltip>
+                )
+            }
+        </Box>
     )
 }

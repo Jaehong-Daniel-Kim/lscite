@@ -1,20 +1,11 @@
 import {
-    Box,
-    Button,
-    Divider,
     Heading,
     HStack,
     IconButton,
-    Stack,
     Tooltip,
     VStack,
-    Text,
-    useDisclosure, Collapse
 } from "@chakra-ui/react";
 import {TbLayoutSidebarLeftCollapse, TbLayoutSidebarRightCollapse} from "react-icons/tb";
-import {BsDot, BsEnvelopeArrowDown, BsEnvelopeArrowUp} from "react-icons/bs";
-import {IoDocumentOutline} from "react-icons/io5";
-import {FaCaretDown, FaCaretUp} from "react-icons/fa";
 import {useState} from "react";
 import SidePanelLg from "./SidePanelLg";
 import NewMailLg from "./NewMailLg";
@@ -37,13 +28,13 @@ export default function SidePanel() {
             left={0}
             top={"150px"}
             py={5}
-            w={"300px"}
+            w={!isMenuCollapsed ? "300px" : "100px"}
             minH={"100%"}
             maxH={"100%"}
             backgroundColor={"pink.100"}
         >
             {!isMenuCollapsed? (
-                <VStack>
+                <VStack w={"80%"}>
                     <HStack w={"95%"} justifyContent={"space-between"}>
                         <Heading fontSize={"3xl"}>Mail</Heading>
                         <Tooltip label = {"Collapse"}>
@@ -58,7 +49,7 @@ export default function SidePanel() {
                     <NewMailLg />
                 </VStack>
             ) : (
-                <VStack>
+                <VStack w={"100%"} paddingRight={"4px"}>
                     <Tooltip label = {"Expend"}>
                         <IconButton
                             aria-label={"Expend"}
