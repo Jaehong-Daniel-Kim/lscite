@@ -4,38 +4,14 @@ import {
     Heading,
     VStack,
     Text,
-    Grid,
-    GridItem,
-    HStack,
-    Checkbox,
-    Table,
-    Thead,
-    Tr, Th, Tbody, Td, TableContainer
 } from "@chakra-ui/react";
-import {useRef, useState} from "react";
 import MailTableList from "./MailTableList";
 
 interface IMailList {
     title: string;
 }
 
-const createHeaders = (headers: []) => {
-    return headers.map((item) => ({
-        text: item,
-        ref: useRef(),
-    }));
-}
-
 export default function MailList({title}: IMailList) {
-
-    const [tableHeight, setTableHeight] = useState("auto");
-    const [activeIndex, setActiveIndex] = useState(null);
-    const tableElement = useRef(null);
-    // const columns = createHeaders(headings);
-
-    const [titleColSize, setTitleColSize] = useState("50%")
-    const handleResize = (event: any) => {
-    }
 
     const tableContents = [
         {
@@ -60,11 +36,13 @@ export default function MailList({title}: IMailList) {
 
     return (
         <VStack
-            position={"fixed"}
-            top={"150px"}
+            position={"relative"}
+            display={"block"}
+            // position={"fixed"}
+            // top={"150px"}
             w={"auto"}
             h={"100%"}
-            left={"300px"}
+            // left={"300px"}
         >
             <Box
                 w={"100%"}

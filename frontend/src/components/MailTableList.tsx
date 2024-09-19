@@ -97,9 +97,6 @@ export default function MailTableList({headers, minCellWidth, tableContent}: IMa
         }
     }, [activeIndex, mouseMove, mouseUp, removeListeners])
 
-
-
-
     return (
         <TableContainer w={"100%"} overflowX={"scroll"}>
             <style>{styles}</style>

@@ -9,7 +9,7 @@ import {
     Collapse, Stack
 } from "@chakra-ui/react";
 import MailBox from "./MailBox";
-import {BsDot, BsEnvelopeArrowDown, BsEnvelopeArrowUp} from "react-icons/bs";
+import {BsEnvelopeArrowDown, BsEnvelopeArrowUp} from "react-icons/bs";
 import {IoDocumentOutline} from "react-icons/io5";
 import {FaCaretDown, FaCaretUp} from "react-icons/fa";
 
@@ -44,7 +44,6 @@ export default function SidePanelSm() {
                         />
                     </Tooltip>
                 )}
-
             <Collapse style={{width: "100%"}} in={!isOpen} animateOpacity>
                 <Stack w={"100%"}>
                     <MailBox icon={null} name={"First"} mailCount={2} isSm={true} />

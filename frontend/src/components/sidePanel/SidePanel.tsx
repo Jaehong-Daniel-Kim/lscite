@@ -24,13 +24,15 @@ export default function SidePanel() {
 
     return (
         <VStack
-            position={"fixed"}
-            left={0}
-            top={"150px"}
+            position={"relative"}
+            // position={"fixed"}
+            // left={0}
+            // top={"150px"}
             py={5}
-            w={!isMenuCollapsed ? "300px" : "100px"}
-            minH={"100%"}
-            maxH={"100%"}
+            w={!isMenuCollapsed ? "600px" : "100px"}
+            // minH={"100%"}
+            // maxH={"100%"}
+            h={"100vh"}
             backgroundColor={"pink.100"}
         >
             {!isMenuCollapsed? (
@@ -49,7 +51,7 @@ export default function SidePanel() {
                     <NewMailLg />
                 </VStack>
             ) : (
-                <VStack w={"100%"} paddingRight={"4px"}>
+                <VStack w={"100%"}>
                     <Tooltip label = {"Expend"}>
                         <IconButton
                             aria-label={"Expend"}

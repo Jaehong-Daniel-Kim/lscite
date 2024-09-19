@@ -36,15 +36,16 @@ export default function Header() {
 
     return (
         <VStack
-            backgroundColor={"gray.400"}
+            backgroundColor={"pink.200"}
             justifyContent={"space-between"}
-            paddingTop={"10"}
+            paddingTop={"7"}
             paddingBottom={"5"}
             px={"5"}
             borderBottomWidth={1}
-            w={"100%"}
-            h={"150px"}
-            position={"fixed"}
+            w={"100vw"}
+            h={"130px"}
+            position={"relative"}
+            // position={"fixed"}
         >
             <HStack
                 w={"100%"}

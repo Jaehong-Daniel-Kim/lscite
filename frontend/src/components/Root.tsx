@@ -1,5 +1,5 @@
 import {Outlet} from "react-router-dom";
-import {Box, HStack} from "@chakra-ui/react";
+import {Box, HStack, VStack} from "@chakra-ui/react";
 import React from "react";
 import Header from "./Header";
 import MailList from "./MailList";
@@ -7,18 +7,15 @@ import SidePanel from "./sidePanel/SidePanel";
 
 export default function Root() {
     return (
-        <Box
+        <VStack
             w={"100vw"}
             h={"100vh"}
-            overflowY={"hidden"}
+            position={"fixed"}
+            id={"container"}
+            gap={0}
         >
-            <Outlet />
             <Header />
-
-            <HStack>
-                <SidePanel />
-                <MailList title={"Inbox"}/>
-            </HStack>
-        </Box>
+            <Outlet />
+        </VStack>
     )
 }
