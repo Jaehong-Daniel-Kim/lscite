@@ -48,7 +48,11 @@ CUSTOM_APP = [
     "contacts.apps.ContactsConfig",
 ]
 
-INSTALLED_APPS = SYSTEM_APP + CUSTOM_APP
+THIRD_PARTY = [
+    "rest_framework",
+]
+
+INSTALLED_APPS = SYSTEM_APP + CUSTOM_APP + THIRD_PARTY
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -138,3 +142,11 @@ AUTH_USER_MODEL = 'users.User'
 
 # Media Root
 MEDIA_ROOT = "uploads/"
+
+
+# TODO:
+#  1. Users model needs to have "직급"
+#  2. Separate "SECRETE KEY" from config file
+#  3. Postbox: change "user" field to "owner" field since that makes more sense
+
+
