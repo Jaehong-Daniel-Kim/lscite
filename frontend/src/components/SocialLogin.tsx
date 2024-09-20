@@ -6,14 +6,14 @@ export default function SocialLogin() {
     return (
         <Box>
             <HStack my={8}>
-                <Divider />
+                <Divider borderColor={"white"}/>
                 <Text textTransform={"uppercase"}
-                      color={"gray.500"}
+                      color={"gray.700"}
                       fontSize={"xs"}
                       as={"b"} >
                     Or
                 </Text>
-                <Divider />
+                <Divider borderColor={"white"}/>
             </HStack>
             <VStack>
                 <Button w={"100%"} leftIcon={<FaGithub />} colorScheme={"blue"}>
