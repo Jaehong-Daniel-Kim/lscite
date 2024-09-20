@@ -10,8 +10,6 @@ from common.models import CommonModel
 class CustomUserManager(BaseUserManager):
 
     def create_user(self, username, password=None, **extra_fields):
-        # if not email:
-        #     raise ValueError("Email is required")
         if email := extra_fields.get("email"):
             try:
                 validate_email(email)

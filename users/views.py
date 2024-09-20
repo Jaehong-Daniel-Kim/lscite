@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -32,6 +33,30 @@ class Users(APIView):
                 return Response(serializer.errors)
         else:
             raise ParseError
+
+
+class LogIn(APIView):
+
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+        if not username or not password:
+            raise ParseError
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user=user)
+            return Response({"OK": "Success."})
+        else:
+            return Response({"ERROR": "Failed. Check username or password again."})
+
+
+class LogOut(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        logout(request)
+        return Response({"OK": "Success"})
 
 
 class Me(APIView):
