@@ -184,3 +184,4 @@ uploads/
 
 # FRONTEND
 frontend/package-lock.json
+!frontend/src/lib/

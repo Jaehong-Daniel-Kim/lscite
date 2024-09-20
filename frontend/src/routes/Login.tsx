@@ -1,22 +1,32 @@
 import {
     Box,
     Button,
-    Center,
     Container, IconButton,
     Input,
     InputGroup,
     InputLeftElement,
     InputRightElement,
-    Text,
+    Text, useToast,
     VStack
 } from "@chakra-ui/react";
 import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa";
 import React, {useState} from "react";
 import SocialLogin from "../components/SocialLogin";
+import useUser from "../lib/useUser";
 
 export default function Login() {
-    const [show, setShow] = useState(false)
-    const handlePasswordVisibility = () => setShow(!show)
+    const [showPassword, setShowPassword] = useState(false);
+    const handlePasswordVisibility = () => setShowPassword(!showPassword);
+
+    const {isLoading, data, isError} = useUser()
+
+    const toast = useToast();
+
+    const handleLogin = () => {
+        console.log(isLoading, data, isError)
+    }
+
+
 
     return (
         <Container
@@ -61,12 +71,12 @@ export default function Login() {
                     <Input
                         focusBorderColor={"pink.400"}
                         variant={"filled"}
-                        type={show ? "text" : "password"}
+                        type={showPassword ? "text" : "password"}
                         placeholder={"Password"}
                     />
                     <InputRightElement>
                         {
-                            show ? (
+                            showPassword ? (
                                 <IconButton
                                     aria-label={"password visible"}
                                     icon={<FaEye />}
@@ -90,6 +100,7 @@ export default function Login() {
             <Button
                 colorScheme={"red"}
                 w={"100%"}
+                onClick={handleLogin}
             >Login
             </Button>
             <SocialLogin />

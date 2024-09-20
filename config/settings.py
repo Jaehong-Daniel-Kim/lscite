@@ -50,6 +50,7 @@ CUSTOM_APP = [
 
 THIRD_PARTY = [
     "rest_framework",
+    "corsheaders",
 ]
 
 INSTALLED_APPS = SYSTEM_APP + CUSTOM_APP + THIRD_PARTY
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -142,6 +144,12 @@ AUTH_USER_MODEL = 'users.User'
 
 # Media Root
 MEDIA_ROOT = "uploads/"
+
+# django-cors-headers
+# -> add "corsheaders" to thrid-party app
+# -> add "corsheaders.middleware.CorsMiddleWare" to MIDDLEWARE
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]  # Allow Access
+CORS_ALLOW_CREDENTIALS = True  # Access-Control-Allow-Credentials
 
 
 # TODO:
