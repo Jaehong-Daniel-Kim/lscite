@@ -38,6 +38,7 @@ class EmailAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailAddress
         fields = (
+            "type",
             "email",
         )
 

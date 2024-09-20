@@ -40,12 +40,19 @@ class EmailAddress(CommonModel):
     class Meta:
         db_table = "user_email_addresses"
 
+    class EmailTypeChoice(models.TextChoices):
+        Type1 = ("type1", "Type1")
+        Type2 = ("type2", "Type2")
+
     user = models.ForeignKey("users.User",
                              on_delete=models.CASCADE,
                              related_name="emails")
     email = models.EmailField(unique=True,
                               help_text="Required. 254 characters or fewer in [email@domain.com] format",
                               error_messages={"unique": "A user with that email address already exists"})
+    type = models.CharField(max_length=5,
+                            choices=EmailTypeChoice.choices,
+                            null=True)
 
     def __str__(self):
         return self.email
