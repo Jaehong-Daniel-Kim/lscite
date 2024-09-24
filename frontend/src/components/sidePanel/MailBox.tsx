@@ -1,5 +1,4 @@
 import {Box, Button, HStack, IconButton, Text, Tooltip} from "@chakra-ui/react";
-import {BsDot} from "react-icons/bs";
 
 interface IMailBox {
     icon: any  // How to explicitly type react-icons

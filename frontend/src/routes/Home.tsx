@@ -14,14 +14,17 @@ import {
 import React, {useState} from "react";
 import SidePanel from "../components/sidePanel/SidePanel";
 import MailList from "../components/MailList";
-import Header from "../components/Header";
+import Header from "../components/header/Header";
 
 export default function Home() {
 
     return (
         <>
         <Header />
-        <HStack position={"relative"}>
+        <HStack
+            position={"relative"}
+            gap={0}
+        >
             <SidePanel />
             <MailList title={"Inbox"}/>
         </HStack>

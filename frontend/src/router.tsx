@@ -1,8 +1,9 @@
-import {createBrowserRouter} from "react-router-dom";
+import {createBrowserRouter, redirect} from "react-router-dom";
 import Root from "./components/Root";
 import Home from "./routes/Home";
 import NotFound from "./routes/NotFound";
 import Login from "./routes/Login";
+import {GetMe} from "./api";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -10,12 +11,39 @@ const router = createBrowserRouter([{
     errorElement: <NotFound />,
     children: [
         {
+            index: true,
+            loader: async () => {
+                const user = await GetMe()
+                if (!user) {
+                    return redirect("/login");
+                } else {
+                    return redirect("/home");
+                }
+            }
+        },
+        {
             path: "home",
-            element: <Home />
+            element: <Home />,
+            loader: async () => {
+                const user = await GetMe()
+                if (!user) {
+                    return redirect("/login");
+                } else {
+                    return null;
+                }
+            }
         },
         {
             path: "login",
-            element: <Login />
+            element: <Login />,
+            loader: async () => {
+                const user = await GetMe()
+                if (!user) {
+                    return null;
+                } else {
+                    return redirect("/home");
+                }
+            }
         },
     ]
 }])

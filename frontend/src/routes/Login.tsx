@@ -12,18 +12,15 @@ import {
 import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa";
 import React, {useState} from "react";
 import SocialLogin from "../components/SocialLogin";
-import useUser from "../lib/useUser";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const handlePasswordVisibility = () => setShowPassword(!showPassword);
 
-    const {isLoading, data, isError} = useUser()
-
     const toast = useToast();
 
     const handleLogin = () => {
-        console.log(isLoading, data, isError)
+        return
     }
 
 

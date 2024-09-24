@@ -24,16 +24,11 @@ export default function SidePanel() {
 
     return (
         <VStack
+            borderRight={"0.5px solid gray"}
             position={"relative"}
-            // position={"fixed"}
-            // left={0}
-            // top={"150px"}
             py={5}
             w={!isMenuCollapsed ? "600px" : "100px"}
-            // minH={"100%"}
-            // maxH={"100%"}
             h={"100vh"}
-            backgroundColor={"pink.100"}
         >
             {!isMenuCollapsed? (
                 <VStack w={"80%"}>

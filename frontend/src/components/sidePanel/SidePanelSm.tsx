@@ -1,7 +1,5 @@
 import {
-    Text,
     Divider,
-    HStack,
     IconButton,
     Tooltip,
     useDisclosure,

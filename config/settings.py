@@ -151,6 +151,9 @@ MEDIA_ROOT = "uploads/"
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]  # Allow Access
 CORS_ALLOW_CREDENTIALS = True  # Access-Control-Allow-Credentials
 
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]  # Needed to allow receiving POST request from the browser
+
+
 
 # TODO:
 #  1. Users model needs to have "직급"
