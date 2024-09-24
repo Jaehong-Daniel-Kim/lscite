@@ -13,7 +13,7 @@ import {
     VStack
 } from "@chakra-ui/react";
 import {FaLock, FaUser} from "react-icons/fa";
-import SocialLogin from "./SocialLogin";
+import LoginOptions from "./LoginOptions";
 import React from "react";
 
 interface LoginModalProps {
@@ -48,7 +48,7 @@ export default function LoginModal({isOpen, onClose}: LoginModalProps) {
                         </InputGroup>
                     </VStack>
                     <Button colorScheme={"red"} w={"100%"}>Login</Button>
-                    <SocialLogin/>
+                    <LoginOptions/>
                 </ModalBody>
             </ModalContent>
         </Modal>

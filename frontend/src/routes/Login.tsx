@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa";
 import React, {useState} from "react";
-import SocialLogin from "../components/SocialLogin";
+import LoginOptions from "../components/LoginOptions";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
@@ -39,6 +39,7 @@ export default function Login() {
 
         >
             <VStack my={5}>
+                {/*username input*/}
                 <InputGroup
                     bg={"white"}
                     borderRadius={10}
@@ -56,6 +57,7 @@ export default function Login() {
                     />
                 </InputGroup>
 
+                {/*password input*/}
                 <InputGroup
                     bg={"white"}
                     borderRadius={10}
@@ -94,13 +96,15 @@ export default function Login() {
                     </InputRightElement>
                 </InputGroup>
             </VStack>
+
+            {/*login button*/}
             <Button
                 colorScheme={"red"}
                 w={"100%"}
                 onClick={handleLogin}
             >Login
             </Button>
-            <SocialLogin />
+            <LoginOptions />
         </Container>
     )
 }
