@@ -47,7 +47,7 @@ class LogIn(APIView):
             login(request, user=user)
             return Response({"OK": "Success."})
         else:
-            return Response({"ERROR": "Failed. Check username or password again."})
+            return Response({"ERROR": "Failed. Check username or password again."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class LogOut(APIView):

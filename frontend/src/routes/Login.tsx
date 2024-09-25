@@ -10,20 +10,53 @@ import {
     VStack
 } from "@chakra-ui/react";
 import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa";
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import LoginOptions from "../components/LoginOptions";
+import {LogIn} from "../api";
+import {useNavigate} from "react-router-dom";
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
-    const handlePasswordVisibility = () => setShowPassword(!showPassword);
-
+    const userName = useRef("");
+    const userPw = useRef("");
+    const navigate = useNavigate();
     const toast = useToast();
 
-    const handleLogin = () => {
-        return
+    const handlePasswordVisibility = () => setShowPassword(!showPassword);
+    const handleUserNameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        userName.current = e.target.value
+    }
+
+    const handleUserPasswordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        userPw.current = e.target.value
     }
 
 
+    const handleLogin = async () => {
+        const loginStatusToast = toast({
+            title: "Waiting",
+            description: "Trying to logging you in...",
+            status: "loading",
+        });
+        const response = await LogIn(userName.current, userPw.current);
+        const {OK: successMsg, ERROR: failMsg} = response.data
+
+        if (response.status === 200) {
+            toast.update(loginStatusToast, {
+                title: "OK",
+                description: successMsg,
+                status: "success",
+            })
+            navigate("/home")
+
+        } else {
+            toast.update(loginStatusToast, {
+                title: "ERROR",
+                description: failMsg,
+                status: "error"
+            })
+        }
+    }
 
     return (
         <Container
@@ -54,6 +87,9 @@ export default function Login() {
                         focusBorderColor={"pink.400"}
                         variant={"filled"}
                         placeholder={"Username"}
+                        name={"userName"}
+                        id={"userName"}
+                        onChange={handleUserNameInput}
                     />
                 </InputGroup>
 
@@ -72,6 +108,9 @@ export default function Login() {
                         variant={"filled"}
                         type={showPassword ? "text" : "password"}
                         placeholder={"Password"}
+                        name={"userPassword"}
+                        id={"userPassword"}
+                        onChange={handleUserPasswordInput}
                     />
                     <InputRightElement>
                         {

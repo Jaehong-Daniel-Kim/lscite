@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookie from "js-cookie"
+import * as querystring from "querystring";
 
 
 const instance = axios.create({
@@ -38,4 +39,18 @@ export const LogOut = () => {
         },
     )
         .then((response) => response.data)
+}
+
+export const LogIn = (username: string, password: string) => {
+    return instance.post(
+        "users/login",
+        {
+            username: username,
+            password: password,
+        },
+        {},
+    ).then((response) => response)
+        .catch((error) => {
+                return error.response
+        })
 }
