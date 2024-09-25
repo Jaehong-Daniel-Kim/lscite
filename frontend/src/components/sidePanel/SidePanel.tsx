@@ -41,11 +41,11 @@ export default function SidePanel() {
                 {!isMenuCollapsed? (
                     <VStack w={"80%"}>
                         <HStack w={"95%"} justifyContent={"space-between"}>
-                            <Heading fontSize={"3xl"}>Mail</Heading>
+                            <Heading fontSize={"2xl"}>Mail</Heading>
                             <Tooltip label = {"Collapse"}>
                                 <IconButton
                                     aria-label={"Collapse"}
-                                    icon={<TbLayoutSidebarLeftCollapse size={"30"} />}
+                                    icon={<TbLayoutSidebarLeftCollapse size={"25"} />}
                                     variant={"ghost"}
                                     onClick={handleMenuCollapse}
                                 />
@@ -58,7 +58,7 @@ export default function SidePanel() {
                         <Tooltip label = {"Expend"}>
                             <IconButton
                                 aria-label={"Expend"}
-                                icon={<TbLayoutSidebarRightCollapse size={"30"} />}
+                                icon={<TbLayoutSidebarRightCollapse size={"25"} />}
                                 variant={"ghost"}
                                 onClick={handleMenuCollapse}
                             />

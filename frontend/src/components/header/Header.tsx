@@ -5,7 +5,6 @@ import {
     IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Text,
     useColorMode,
     useColorModeValue,
-    useDisclosure,
     VStack
 } from "@chakra-ui/react";
 import {ImMail3} from "react-icons/im";
@@ -29,7 +28,7 @@ export default function Header() {
 
     const HeaderNavigation = ({href, text}: IHeaderNav) =>  (
         <Link href={`${href}`}>
-            <Text fontSize={"lg"} as={"b"} _hover={{cursor: "pointer", color: "crimson"}}>{text}</Text>
+            <Text fontSize={"md"} as={"b"} _hover={{cursor: "pointer", color: "crimson"}}>{text}</Text>
         </Link>
     );
 
@@ -69,6 +68,7 @@ export default function Header() {
                                 aria-label={"Toggle dark mode"}
                                 icon={<Icon/>}
                     />
+
                     {/* User Badge */}
                     <Menu>
                         <MenuButton>

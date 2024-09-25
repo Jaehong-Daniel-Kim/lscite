@@ -26,6 +26,7 @@ export default function Home() {
             gap={0}
         >
             <SidePanel />
+
             <MailList title={"Inbox"}/>
         </HStack>
         </>

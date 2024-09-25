@@ -9,7 +9,7 @@ export default function NewMailLg() {
             marginTop={5}
             py={"7"}
             w={"100%"}
-            fontSize={"2xl"}
+            fontSize={"xl"}
             borderRadius={"10"}
             onClick={() => {console.log('clicked')}}
         >

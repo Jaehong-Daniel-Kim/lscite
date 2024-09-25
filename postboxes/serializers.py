@@ -4,12 +4,14 @@ from users.serializers import TinyUserSerializer
 
 
 class PostboxListSerializer(serializers.ModelSerializer):
+    unreadMails = serializers.CharField(source='unread_mails')
+
     class Meta:
         model = Postbox
         fields = (
-            "pk",
             "name",
             "description",
+            "unreadMails"
         )
 
 
@@ -28,12 +30,9 @@ class CreatePostboxSerializer(serializers.ModelSerializer):
 
 class PostboxDetailSerializer(serializers.ModelSerializer):
 
-    mail_count = serializers.IntegerField(source="total_mails", read_only=True)
-
     class Meta:
         model = Postbox
         fields = (
             "name",
             "description",
-            "mail_count",
         )

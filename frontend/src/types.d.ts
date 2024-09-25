@@ -21,3 +21,9 @@ export interface IUser {
     company: ICompany;
     department: IDepartment;
 }
+
+export interface IMailbox {
+    name: string;
+    description: string;
+    unreadMails: string;
+}

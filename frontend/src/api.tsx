@@ -9,11 +9,6 @@ const instance = axios.create({
 
 })
 
-// export default function GetMe() {
-//     return instance.get("users/me")
-//         .then((response) => response.data)
-// }
-
 export const GetMe = () => {
     return instance.get("users/me")
         .then((response) => response.data)
@@ -53,4 +48,8 @@ export const LogIn = (username: string, password: string) => {
         .catch((error) => {
                 return error.response
         })
+}
+
+export const getMailboxes = () => {
+    return instance.get( "postboxes/" ).then((response) => response.data)
 }

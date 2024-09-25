@@ -10,5 +10,6 @@ class PostBoxAdmin(admin.ModelAdmin):
         "name",
         "user",
         "description",
-        "total_mails"
+        "total_mails",
+        "unread_mails",
     )

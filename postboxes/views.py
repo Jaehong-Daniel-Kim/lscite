@@ -14,6 +14,9 @@ from .models import Postbox
 # Create your views here.
 
 class Postboxes(APIView):
+    """
+    api/v1/postboxes
+    """
 
     permission_classes = [IsAuthenticated]
 
@@ -46,20 +49,22 @@ class PostboxesDetail(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get_object(self, pk):
+    def get_object(self, user, postbox):
         try:
-            postbox = Postbox.objects.get(pk=pk)
+            postbox = Postbox.objects.get(user=user, name=postbox)
             return postbox
         except Postbox.DoesNotExist:
             raise NotFound
 
-    def get(self, request, pk):
-        postbox = self.get_object(pk)
+    def get(self, request, postbox):
+        user = request.user
+        postbox = self.get_object(user, postbox)
         serializer = PostboxDetailSerializer(postbox)
         return Response(serializer.data)
 
-    def put(self, request,pk):
-        postbox = self.get_object(pk)
+    def put(self, request, postbox):
+        user = request.user
+        postbox = self.get_object(user, postbox)
         serializer = PostboxDetailSerializer(postbox, data=request.data, partial=True)
         # user validation
         if not request.user.is_superuser or postbox.user != request.user:
@@ -70,11 +75,9 @@ class PostboxesDetail(APIView):
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        postbox = self.get_object(pk)
+    def delete(self, request, postbox):
+        user = request.user
+        postbox = self.get_object(user, postbox)
         postbox.delete()
         return Response(status=HTTP_204_NO_CONTENT)
-
-
-
 

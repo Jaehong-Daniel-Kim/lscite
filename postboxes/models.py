@@ -34,5 +34,13 @@ class Postbox(CommonModel):
     def total_mails(self):
         return self.emails.count()
 
+    def unread_mails(self) -> str:
+        threshold = 100
+        rows: int = self.emails.filter(status="unread")[:threshold].count()
+        if rows >= threshold:
+            return "99+"
+        else:
+            return str(rows)
+
     def __str__(self):
         return self.name
