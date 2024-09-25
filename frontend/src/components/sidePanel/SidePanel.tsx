@@ -1,4 +1,7 @@
 import {
+    chakra,
+    Text,
+    Box,
     Heading,
     HStack,
     IconButton,
@@ -23,47 +26,79 @@ export default function SidePanel() {
     }
 
     return (
-        <VStack
-            borderRight={"0.5px solid gray"}
-            position={"relative"}
+        <HStack
             py={5}
+            borderRight={"0.5px solid gray"}
             w={!isMenuCollapsed ? "600px" : "100px"}
             h={"100vh"}
+            position={"relative"}
         >
-            {!isMenuCollapsed? (
-                <VStack w={"80%"}>
-                    <HStack w={"95%"} justifyContent={"space-between"}>
-                        <Heading fontSize={"3xl"}>Mail</Heading>
-                        <Tooltip label = {"Collapse"}>
+            <VStack
+                position={"relative"}
+                w={"100%"}
+                h={"100%"}
+            >
+                {!isMenuCollapsed? (
+                    <VStack w={"80%"}>
+                        <HStack w={"95%"} justifyContent={"space-between"}>
+                            <Heading fontSize={"3xl"}>Mail</Heading>
+                            <Tooltip label = {"Collapse"}>
+                                <IconButton
+                                    aria-label={"Collapse"}
+                                    icon={<TbLayoutSidebarLeftCollapse size={"30"} />}
+                                    variant={"ghost"}
+                                    onClick={handleMenuCollapse}
+                                />
+                            </Tooltip>
+                        </HStack>
+                        <NewMailLg />
+                    </VStack>
+                ) : (
+                    <VStack w={"100%"}>
+                        <Tooltip label = {"Expend"}>
                             <IconButton
-                                aria-label={"Collapse"}
-                                icon={<TbLayoutSidebarLeftCollapse size={"30"} />}
+                                aria-label={"Expend"}
+                                icon={<TbLayoutSidebarRightCollapse size={"30"} />}
                                 variant={"ghost"}
                                 onClick={handleMenuCollapse}
                             />
                         </Tooltip>
-                    </HStack>
-                    <NewMailLg />
-                </VStack>
-            ) : (
-                <VStack w={"100%"}>
-                    <Tooltip label = {"Expend"}>
-                        <IconButton
-                            aria-label={"Expend"}
-                            icon={<TbLayoutSidebarRightCollapse size={"30"} />}
-                            variant={"ghost"}
-                            onClick={handleMenuCollapse}
-                        />
-                    </Tooltip>
-                    <NewMailSm />
-                </VStack>
+                        <NewMailSm />
+                    </VStack>
 
-            )}
-            {!isMenuCollapsed ? (
-                <SidePanelLg />
-            ) : (
-                <SidePanelSm />
-            )}
-        </VStack>
+                )}
+                {!isMenuCollapsed ? (
+                    <SidePanelLg />
+                ) : (
+                    <SidePanelSm />
+                )}
+            </VStack>
+            {/*Resize Divider*/}
+            <Box
+                display={"flex"}
+                position={"absolute"}
+                cursor={"col-resize"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                h={"100%"}
+                w={"8px"}
+                left={"calc(100% - 1px)"}
+                _hover={
+                    { borderLeft: "1px solid red" }
+                }
+            >
+                <Box
+                    display={"flex"}
+                    flexDirection={"column"}
+                    gap={"2px"}
+                >
+                    <chakra.span display={"block"} width={"2px"} h={"2px"} bgColor={"#5a5a5a"} />
+                    <chakra.span display={"block"} width={"2px"} h={"2px"} bgColor={"#5a5a5a"} />
+                    <chakra.span display={"block"} width={"2px"} h={"2px"} bgColor={"#5a5a5a"} />
+                    <chakra.span display={"block"} width={"2px"} h={"2px"} bgColor={"#5a5a5a"} />
+                </Box>
+
+            </Box>
+        </HStack>
     )
 }

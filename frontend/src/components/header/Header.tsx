@@ -1,7 +1,6 @@
 import {
     Avatar,
     Box,
-    Button,
     HStack,
     IconButton, Link, Menu, MenuButton, MenuItem, MenuList, Text,
     useColorMode,
@@ -12,11 +11,8 @@ import {
 import {ImMail3} from "react-icons/im";
 import {FaMoon, FaSun} from "react-icons/fa";
 import React from "react";
-import LoginModal from "../LoginModal";
-import SignUpModal from "../SignUpModal";
 import useUser from "../../lib/useUser";
 import {LogOut} from "../../api";
-import {redirect} from "react-router-dom";
 
 interface IHeaderNav {
     href: string;
@@ -25,10 +21,7 @@ interface IHeaderNav {
 
 export default function Header() {
 
-    const { isUser, isUserLoading, user } = useUser();
-
-    const {isOpen: isLoginOpen, onClose: onLoginClose, onOpen: onLoginOpen} = useDisclosure();
-    const {isOpen: isSignUpOpen, onClose: onSignUpClose, onOpen: onSignUpOpen} = useDisclosure();
+    const { user } = useUser();
 
     const {toggleColorMode} = useColorMode();
     const logoColor = useColorModeValue("red.500", "red.200");
@@ -87,19 +80,15 @@ export default function Header() {
                             </Link>
                         </MenuList>
                     </Menu>
-                    {/*<Button onClick={onLoginOpen}>Log in</Button>*/}
-                    {/*<Button onClick={onSignUpOpen} colorScheme={"red"}>Sign up</Button>*/}
                 </HStack>
-
-
-                {/*<LoginModal isOpen={isLoginOpen} onClose={onLoginClose}/>*/}
-                {/*<SignUpModal isOpen={isSignUpOpen} onClose={onSignUpClose}/>*/}
             </HStack>
+
+            {/*Navigation Menus*/}
             <HStack
                 w={"100%"}
-                paddingTop={"5"}
-                columnGap={"5"}
+                py={"2"}
                 px={"5"}
+                columnGap={"5"}
             >
                 <HeaderNavigation href={"/"} text={"Home"} />
                 <HeaderNavigation href={"/"} text={"Mail"} />
