@@ -31,6 +31,12 @@ export default function Login() {
         userPw.current = e.target.value
     }
 
+    const handleEnterKey = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            await handleLogin()
+        }
+    }
+
 
     const handleLogin = async () => {
         const loginStatusToast = toast({
@@ -111,6 +117,7 @@ export default function Login() {
                         name={"userPassword"}
                         id={"userPassword"}
                         onChange={handleUserPasswordInput}
+                        onKeyDown={handleEnterKey}
                     />
                     <InputRightElement>
                         {
