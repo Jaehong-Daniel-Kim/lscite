@@ -1,6 +1,7 @@
 import axios from "axios";
 import Cookie from "js-cookie"
 import * as querystring from "querystring";
+import {QueryFunctionContext, QueryKey} from "@tanstack/react-query";
 
 
 const instance = axios.create({
@@ -9,7 +10,7 @@ const instance = axios.create({
 
 })
 
-export const GetMe = () => {
+export const getMe = () => {
     return instance.get("users/me")
         .then((response) => response.data)
         .catch((error) => {
@@ -18,12 +19,11 @@ export const GetMe = () => {
             } else if (error.request) {
                 return null
             } else {
-
             }
         })
 }
 
-export const LogOut = () => {
+export const logOut = () => {
     return instance.post(
         "users/logout",
         null,
@@ -36,7 +36,7 @@ export const LogOut = () => {
         .then((response) => response.data)
 }
 
-export const LogIn = (username: string, password: string) => {
+export const logIn = (username: string, password: string) => {
     return instance.post(
         "users/login",
         {
@@ -52,4 +52,9 @@ export const LogIn = (username: string, password: string) => {
 
 export const getMailboxes = () => {
     return instance.get( "postboxes/" ).then((response) => response.data)
+}
+
+export const getExistenceOfUser = (username: string) => {
+    return instance.get(`users/exists/${username}`)
+        .then((response) => response.data)
 }

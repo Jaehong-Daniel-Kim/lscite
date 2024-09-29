@@ -12,7 +12,7 @@ import {
 import {FaEye, FaEyeSlash, FaLock, FaUser} from "react-icons/fa";
 import React, {useRef, useState} from "react";
 import LoginOptions from "../components/LoginOptions";
-import {LogIn} from "../api";
+import {logIn} from "../api";
 import {useNavigate} from "react-router-dom";
 
 export default function Login() {
@@ -44,7 +44,7 @@ export default function Login() {
             description: "Trying to logging you in...",
             status: "loading",
         });
-        const response = await LogIn(userName.current, userPw.current);
+        const response = await logIn(userName.current, userPw.current);
         const {OK: successMsg, ERROR: failMsg} = response.data
 
         if (response.status === 200) {

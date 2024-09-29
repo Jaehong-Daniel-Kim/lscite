@@ -3,7 +3,7 @@ import Root from "./components/Root";
 import Home from "./routes/Home";
 import NotFound from "./routes/NotFound";
 import Login from "./routes/Login";
-import {GetMe} from "./api";
+import {getMe} from "./api";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -13,7 +13,7 @@ const router = createBrowserRouter([{
         {
             index: true,
             loader: async () => {
-                const user = await GetMe()
+                const user = await getMe()
                 if (!user) {
                     return redirect("/login");
                 } else {
@@ -25,7 +25,7 @@ const router = createBrowserRouter([{
             path: "home",
             element: <Home />,
             loader: async () => {
-                const user = await GetMe()
+                const user = await getMe()
                 if (!user) {
                     return redirect("/login");
                 } else {
@@ -37,7 +37,7 @@ const router = createBrowserRouter([{
             path: "login",
             element: <Login />,
             loader: async () => {
-                const user = await GetMe()
+                const user = await getMe()
                 if (!user) {
                     return null;
                 } else {

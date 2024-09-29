@@ -101,4 +101,15 @@ class PublicUser(APIView):
         return Response(serializer.data)
 
 
+class UserExistence(APIView):
+    """
+    # api/v1/users/exists/<username>
 
+    aPI view for searching existence of a user
+    """
+
+    def get(self, request, username):
+        if User.objects.filter(username=username).exists():
+            return Response({"Error": "User already exists"}, status=status.HTTP_200_OK)
+        else:
+            return Response({"Ok": "Username available to use"}, status=status.HTTP_200_OK)

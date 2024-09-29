@@ -11,7 +11,7 @@ import {ImMail3} from "react-icons/im";
 import {FaMoon, FaSun} from "react-icons/fa";
 import React from "react";
 import useUser from "../../lib/useUser";
-import {LogOut} from "../../api";
+import {logOut} from "../../api";
 
 interface IHeaderNav {
     href: string;
@@ -20,7 +20,7 @@ interface IHeaderNav {
 
 export default function Header() {
 
-    const { user } = useUser();
+    const { isUserLoading, isUserLoggedIn, user } = useUser();
 
     const {toggleColorMode} = useColorMode();
     const logoColor = useColorModeValue("red.500", "red.200");
@@ -33,7 +33,7 @@ export default function Header() {
     );
 
     const onLogOut = async () => {
-        await LogOut()
+        await logOut()
     }
 
     return (
