@@ -1,11 +1,3 @@
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path("", views.Users.as_view()),  # POST
-    path("exists/<str:username>", views.UserExistence.as_view()),  # GET
-    path("login", views.LogIn.as_view()),  # POST
-    path("logout", views.LogOut.as_view()),  # POST
-    path("me", views.Me.as_view()),   # GET | PUT
-    path("<str:username>", views.PublicUser.as_view()),  # GET
-]
+version https://git-lfs.github.com/spec/v1
+oid sha256:31011dcb124cc88c65945c2c06f27c2e7d0f4ccd0e1a86faae7c3d53555e05ec
+size 620

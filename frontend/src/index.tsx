@@ -1,25 +1,3 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import {ChakraProvider, ColorModeScript} from "@chakra-ui/react";
-import {RouterProvider} from "react-router-dom";
-import router from "./router";
-import theme from "./theme";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
-
-const client = new QueryClient();
-
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
-  <React.StrictMode>
-      <QueryClientProvider client={client} >
-          <ChakraProvider theme={theme}>
-              <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-              <RouterProvider router={router} />
-          </ChakraProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-  </React.StrictMode>
-);
+version https://git-lfs.github.com/spec/v1
+oid sha256:1c81f4b224a002286a6b6deb4cabf07276db42a708f97cd31900f18b517b64e4
+size 893

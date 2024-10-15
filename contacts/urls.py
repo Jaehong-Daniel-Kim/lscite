@@ -1,8 +1,3 @@
-from django.urls import include, path
-from .views import Contacts, ContactsDetail, UserContactsInfo
-
-urlpatterns = [
-    path("", Contacts.as_view()),  # GET | POST
-    path("<int:pk>", ContactsDetail.as_view()),  # GET | POST
-    path("<int:pk>/contacts", UserContactsInfo.as_view()),  # GET | POST
-]
+version https://git-lfs.github.com/spec/v1
+oid sha256:0bcda745b681531ce86c444d5e6269b8c72cdae989b7d3919a1d28fc34712c17
+size 301

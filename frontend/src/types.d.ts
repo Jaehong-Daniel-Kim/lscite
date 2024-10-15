@@ -1,29 +1,3 @@
-export interface IDepartment {
-    department: string;
-    group: string;
-    team: string;
-}
-export interface ICompany {
-    name: string;
-}
-export interface IEmailAddresses {
-    type: string;
-    email: string;
-}
-export interface IUser {
-    avatar: string;
-    username: string;
-    first_name: string;
-    last_name: string;
-    phone: string;
-    emails: IEmailAddresses[];
-    language: string;
-    company: ICompany;
-    department: IDepartment;
-}
-
-export interface IMailbox {
-    name: string;
-    description: string;
-    unreadMails: string;
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8186edaf43e2591e2242c104149d0d45e048b14567a889e00416ba5d9fb794be
+size 1075

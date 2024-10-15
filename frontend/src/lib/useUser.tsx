@@ -1,15 +1,3 @@
-import {useQuery} from "@tanstack/react-query";
-import {IUser} from "../types";
-import {getMe} from "../api";
-
-export default function useUser() {
-    const {isLoading, data, isError} = useQuery<IUser>({
-        queryKey: ["Me"], queryFn: getMe, retry: false
-    })
-
-    return {
-        isUserLoading: isLoading,
-        user: data,
-        isUserLoggedIn: !isError,
-    }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:4b00ce75909e022fc32aa9e6b61e7ae1b0dfebdff3fbc32508472632a20629d5
+size 375
