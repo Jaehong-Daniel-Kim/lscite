@@ -1,3 +1,38 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:8f04456e554fc806e38382cc1fed05cdf18e39e04edd1e95f3e34e733ac825bc
-size 806
+from rest_framework import serializers
+from .models import Postbox
+from users.serializers import TinyUserSerializer
+
+
+class PostboxListSerializer(serializers.ModelSerializer):
+    unreadMails = serializers.CharField(source='unread_mails')
+
+    class Meta:
+        model = Postbox
+        fields = (
+            "name",
+            "description",
+            "unreadMails"
+        )
+
+
+class CreatePostboxSerializer(serializers.ModelSerializer):
+
+    user = TinyUserSerializer(read_only=True)
+
+    class Meta:
+        model = Postbox
+        fields = (
+            "name",
+            "description",
+            "user"
+        )
+
+
+class PostboxDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Postbox
+        fields = (
+            "name",
+            "description",
+        )

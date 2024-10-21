@@ -1,3 +1,45 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:53a918ab2df991d3a0462c1ea45dd68d2b35136cf25b46395b2c7067bec0adb3
-size 1086
+from rest_framework import serializers
+from .models import Contact
+from users.serializers import ProfileSerializer, ContactsInfoSerializer
+from users.models import User
+
+
+class UserContactsInfoSerializer(serializers.ModelSerializer):
+    contacts = ContactsInfoSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Contact
+        fields = (
+            "contacts",
+        )
+
+
+class ContactsListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Contact
+        fields = (
+            "name",
+            "contacts_count",
+        )
+
+    contacts_count = serializers.SerializerMethodField()
+
+    def get_contacts_count(self, instance) -> int:
+        return instance.contacts.count()
+
+
+class ContactsDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Contact
+        fields = (
+            "name",
+            "description",
+            "contacts_count",
+        )
+
+    contacts_count = serializers.SerializerMethodField()
+
+    def get_contacts_count(self, instance) -> int:
+        return instance.contacts.count()

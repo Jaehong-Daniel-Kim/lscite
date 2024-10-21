@@ -1,3 +1,15 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:e06bc393aad6c695a8d863484766eb2868aad4fa0184058bd16df3532aca4eba
-size 285
+from django.contrib import admin
+from .models import Postbox
+
+# Register your models here.
+
+
+@admin.register(Postbox)
+class PostBoxAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "user",
+        "description",
+        "total_mails",
+        "unread_mails",
+    )

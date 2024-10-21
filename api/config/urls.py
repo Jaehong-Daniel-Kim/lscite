@@ -1,3 +1,29 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:9bc099aed5f6c7ba551c2735b012e3d86ed79d3c1a6773f55d03f09b55e04369
-size 1064
+"""
+URL configuration for config project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.0/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+
+api = "api/v1"
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path(f"{api}/contacts/", include("contacts.urls")),
+    path(f"{api}/emails/", include("emails.urls")),
+    path(f"{api}/occupations", include("occupations.urls")),
+    path(f"{api}/postboxes/", include("postboxes.urls")),
+    path(f"{api}/users/", include("users.urls")),
+]

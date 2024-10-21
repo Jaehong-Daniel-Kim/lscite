@@ -1,3 +1,51 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:b2aab0eb29dc82848ef34b41b806b6e3cc7a08b37118621f2654930d1bf6874a
-size 1347
+import {createBrowserRouter, redirect} from "react-router-dom";
+import Root from "./components/Root";
+import Home from "./routes/Home";
+import NotFound from "./routes/NotFound";
+import Login from "./routes/Login";
+import {getMe} from "./api";
+
+const router = createBrowserRouter([{
+    path: "/",
+    element: <Root />,
+    errorElement: <NotFound />,
+    children: [
+        {
+            index: true,
+            loader: async () => {
+                const user = await getMe()
+                if (!user) {
+                    return redirect("/login");
+                } else {
+                    return redirect("/home");
+                }
+            }
+        },
+        {
+            path: "home",
+            element: <Home />,
+            loader: async () => {
+                const user = await getMe()
+                if (!user) {
+                    return redirect("/login");
+                } else {
+                    return null;
+                }
+            }
+        },
+        {
+            path: "login",
+            element: <Login />,
+            loader: async () => {
+                const user = await getMe()
+                if (!user) {
+                    return null;
+                } else {
+                    return redirect("/home");
+                }
+            }
+        },
+    ]
+}])
+
+export default router;

@@ -1,3 +1,38 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:3a3145e0d2f3d92ea8b1c01195d3e51367e36b2f1edcf0409747046005b0acd7
-size 972
+import {
+    Button,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay
+} from "@chakra-ui/react";
+import {useNavigate} from "react-router-dom";
+
+interface ISessionErrorModal {
+    isOpen: boolean;
+    onClose: () => void;
+}
+export default function SessionErrorModal({isOpen, onClose}: ISessionErrorModal) {
+
+    const navigate = useNavigate()
+    const handleBackToLogin = () => {
+        onClose()
+        navigate("/")
+    }
+
+    return (
+        <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay/>
+            <ModalContent>
+                <ModalHeader>Session Expired</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody> Session has expired. Please login again. </ModalBody>
+                <ModalFooter>
+                    <Button onClick={handleBackToLogin}>Ok</Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    )
+}

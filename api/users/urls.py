@@ -1,3 +1,13 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:029fb5c9686e8fe9dbb1c5901dd744fc265dc07f8e5cfdd0519e04efca40bb37
-size 527
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("", views.Users.as_view()),  # POST
+    path("check-existence", views.CheckExistence.as_view()),
+    path("login", views.LogIn.as_view()),  # POST
+    path("logout", views.LogOut.as_view()),  # POST
+    path("me", views.Me.as_view()),   # GET | PUT
+    path("pin-code-gen", views.GeneratePinCode.as_view()),   # POST
+    path("pin-code-check", views.ValidatePinCode.as_view()),   # POST
+    path("<str:username>", views.PublicUser.as_view()),  # GET
+]

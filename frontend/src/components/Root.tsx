@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:92d51527cb691e485a55f457b41a222335320f7b8884484c5450fce32af8bdb0
-size 491
+import {Outlet} from "react-router-dom";
+import {Box, HStack, VStack} from "@chakra-ui/react";
+import React from "react";
+import Header from "./header/Header";
+import MailList from "./MailList";
+import SidePanel from "./sidePanel/SidePanel";
+
+export default function Root() {
+    return (
+        <VStack
+            w={"100vw"}
+            h={"100vh"}
+            position={"fixed"}
+            id={"container"}
+            gap={0}
+        >
+            <Outlet />
+        </VStack>
+    )
+}

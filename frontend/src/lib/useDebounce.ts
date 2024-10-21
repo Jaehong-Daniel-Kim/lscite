@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:8b261d2a9644d32dd55d892798323dbc69f6f12e6376bc3d62917c30424baff0
-size 418
+import {useEffect, useState} from "react";
+
+export default function useDebounce(value: string, delay: number) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay)
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [value, delay]);
+
+    return debouncedValue;
+}

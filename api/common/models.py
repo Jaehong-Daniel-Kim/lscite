@@ -1,3 +1,18 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:52397af52cadb633dfe8d7897a24135f64f0479e4b94a92f904e08b08b9dff9f
-size 608
+from django.db import models
+
+# Create your models here.
+
+
+class CommonModel(models.Model):
+    """ Common Model Definition """
+
+    class Meta:
+        # abstract model will not be added to the database as a table.
+        # It will be a logical model that its fields are going to be used within other models.
+        abstract = True
+
+    # auto_now_add sets the field to current time when the data is first created
+    created_at = models.DateTimeField(auto_now_add=True)
+    # auto_now sets the field to current time everytime data is saved (updated)
+    updated_at = models.DateTimeField(auto_now=True)
+

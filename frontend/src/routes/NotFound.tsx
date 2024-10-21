@@ -1,3 +1,13 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f4fe08359953d9c406a84c98dd06e114ded789013bc58e289e826f148a0050f6
-size 427
+import {Button, Heading, Text, VStack} from "@chakra-ui/react";
+import {Link} from "react-router-dom";
+
+export default function NotFound() {
+    return <VStack bg={"gray.100"} justifyContent={"center"} minH={"100vh"}>
+        <Heading>Page Not Found</Heading>
+        <Text>You're lost</Text>
+        <Link to={"/"}>
+            <Button colorScheme={"red"} variant={"outline"}>Go Home</Button>
+        </Link>
+
+    </VStack>
+}

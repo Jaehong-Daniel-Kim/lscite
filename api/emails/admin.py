@@ -1,3 +1,24 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:bff239b8896a951b65bec81840902804ac5c5302e30dd595e570786a6a2abcf0
-size 471
+from django.contrib import admin
+from .models import Email, EmailAttachment, EmailRecipient
+
+# Register your models here.
+
+
+@admin.register(Email)
+class EmailAdmin(admin.ModelAdmin):
+    list_display = (
+        "subject",
+        "sender",
+        "has_attachment",
+        "created_at",
+    )
+
+
+@admin.register(EmailAttachment)
+class EmailAttachmentAdmin(admin.ModelAdmin):
+    ...
+
+
+@admin.register(EmailRecipient)
+class EmailRecipientAdmin(admin.ModelAdmin):
+    ...

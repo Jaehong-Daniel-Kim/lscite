@@ -1,3 +1,72 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:789fc5bd19ff2740ad1ac993df49eb6072cd028660c881c4a744e832eae02c2c
-size 1173
+version: '3'
+
+services:
+  # API backend
+  lscite-gunicorn:
+    build: 
+      context: .
+      target: API
+    image: gunicorn:dev
+    container_name: api.lscite.net
+    depends_on:
+      - memcached
+    volumes:
+      - tmp:/tmp
+      - static:/app/static
+    networks:
+      - backend
+
+  # NGINX for Backend
+  nginx-be:
+    build:
+      context: .
+      target: NGINX-BE
+    image: nginx-be:dev
+    container_name: backend.lscite.net
+    ports:
+      - 6307:6307
+    depends_on:
+      - lscite-gunicorn
+    volumes:
+      - tmp:/tmp
+      - static:/app/static
+    networks:
+      - backend
+
+  # React Frontend
+  lscite-fe:
+    build:
+      context: .
+      target: NGINX-FE
+    image: react:dev
+    container_name: lscite.net
+    depends_on:
+      - nginx-be
+    ports: 
+      - 6308:6308
+    networks:
+      - backend
+      - frontend
+
+  # memcached
+  memcached:
+    #    Silicon Mac
+    #    platform: linux/arm64v8
+    #    Intel Linux
+    platform: linux/amd64
+    image: memcached:1.6-alpine3.20
+    container_name: memcached.net
+    networks:
+      - backend
+
+volumes:
+  tmp:
+  static:
+      
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    driver: bridge
+
+

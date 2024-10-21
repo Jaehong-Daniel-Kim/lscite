@@ -1,3 +1,44 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:6088093775405c0b14f8c03fbf34d3d43ed6718ef23062a5eaa8818b3fc9d6e1
-size 1030
+import {
+    Box,
+    Button,
+    Checkbox, Divider,
+    Grid,
+    HStack,
+    IconButton,
+    Input,
+    InputGroup,
+    StackDivider,
+    Text, useColorMode, useColorModeValue, useDisclosure,
+    VStack
+} from "@chakra-ui/react";
+import React, {useState} from "react";
+import SidePanel from "../components/sidePanel/SidePanel";
+import MailList from "../components/MailList";
+import Header from "../components/header/Header";
+import useUser from "../lib/useUser";
+import SessionErrorModal from "../components/SessionErrorModal";
+
+
+export default function Home() {
+    const {isUserLoading, isUserLoggedIn, user} = useUser()
+    const {isOpen, onClose, onOpen} = useDisclosure()
+
+    const handleOpenModal = () => {
+        console.log("called")
+        onOpen()
+    }
+
+    return (
+        <>
+            <Header />
+            <HStack
+                position={"relative"}
+                gap={0}
+            >
+                <SidePanel />
+
+                <MailList title={"Inbox"}/>
+            </HStack>
+        </>
+    );
+}
