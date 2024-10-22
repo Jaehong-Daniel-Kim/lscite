@@ -135,9 +135,9 @@ export default function BasicInfoSection({onChange}: IBasicInfoProps) {
                                 onChange={handleSelectDataChange}
                                 onBlur={handleDataExport}
                             >
-                                <option value={"opt1"}>company1</option>
-                                <option value={"opt2"}>company2</option>
-                                <option value={"opt3"}>company3</option>
+                                <option value={"company1"}>company1</option>
+                                <option value={"company2"}>company2</option>
+                                <option value={"company3"}>company3</option>
                             </Select>
                         </HStack>
                     </Tooltip>
@@ -158,9 +158,9 @@ export default function BasicInfoSection({onChange}: IBasicInfoProps) {
                                 onChange={handleSelectDataChange}
                                 onBlur={handleDataExport}
                             >
-                                <option value={"opt1"}>dept1</option>
-                                <option value={"opt2"}>dept2</option>
-                                <option value={"opt3"}>dept3</option>
+                                <option value={"dept1"}>dept1</option>
+                                <option value={"dept2"}>dept2</option>
+                                <option value={"dept3"}>dept3</option>
                             </Select>
                         </HStack>
                     </Tooltip>
@@ -181,9 +181,9 @@ export default function BasicInfoSection({onChange}: IBasicInfoProps) {
                                 onChange={handleSelectDataChange}
                                 onBlur={handleDataExport}
                             >
-                                <option value={"opt1"}>group1</option>
-                                <option value={"opt2"}>group2</option>
-                                <option value={"opt3"}>group3</option>
+                                <option value={"group1"}>group1</option>
+                                <option value={"group2"}>group2</option>
+                                <option value={"group3"}>group3</option>
                             </Select>
                         </HStack>
                     </Tooltip>
@@ -204,9 +204,9 @@ export default function BasicInfoSection({onChange}: IBasicInfoProps) {
                                 onChange={handleSelectDataChange}
                                 onBlur={handleDataExport}
                             >
-                                <option value={"opt1"}>team1</option>
-                                <option value={"opt2"}>team2</option>
-                                <option value={"opt3"}>team3</option>
+                                <option value={"team1"}>team1</option>
+                                <option value={"team2"}>team2</option>
+                                <option value={"team3"}>team3</option>
                             </Select>
                         </HStack>
                     </Tooltip>

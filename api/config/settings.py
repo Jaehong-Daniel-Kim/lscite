@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -157,10 +158,11 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:3000", "http://localhost:6308"]  # Nee
 
 # CACHE
 # timeout default to 5 minutes
+cache_location = "localhost:11211" if os.uname().sysname else "memcached.net:11211"
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
-        "LOCATION": "memcached.net:11211",
+        "LOCATION": cache_location,
         "TIMEOUT": 180,
     }
 }

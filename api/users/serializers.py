@@ -1,4 +1,4 @@
-from .models import User, EmailAddress
+from .models import User
 from occupations.models import Department, Company
 from django.contrib.auth import password_validation as validators
 from rest_framework import serializers
@@ -16,7 +16,19 @@ class TinyUserSerializer(serializers.ModelSerializer):
         )
 
 
+# class EmailAddressSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = EmailAddress
+#         fields = (
+#             "type",
+#             "email",
+#         )
+
+
 class CreateOrUpdateUserSerializer(serializers.ModelSerializer):
+    company = CompanySerializere()
+    department = DepartmentSerializer()
 
     class Meta:
         model = User
@@ -25,6 +37,10 @@ class CreateOrUpdateUserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "password",
+            "primary_email",
+            "secondary_email",
+            "company",
+            "department",
             "phone",
         )
 
@@ -32,20 +48,22 @@ class CreateOrUpdateUserSerializer(serializers.ModelSerializer):
         validators.validate_password(password=value)
         return value
 
+    def create(self, validated_data):
+        company = validated_data.pop("company")
+        department = validated_data.pop("department")
+        company_instance = Company.objects.create(**company)
+        department_instance = Department.objects.create(**department)
+        validated_data.update({
+            "company": company_instance,
+            "department": department_instance,
+        })
+        return User(**validated_data)
 
-class EmailAddressSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = EmailAddress
-        fields = (
-            "type",
-            "email",
-        )
 
 
 class ProfileSerializer(serializers.ModelSerializer):
 
-    emails = EmailAddressSerializer(many=True, read_only=True)
     company = CompanySerializere()
     department = DepartmentSerializer()
 
@@ -57,7 +75,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "phone",
-            "emails",
+            "primary_email",
+            "secondary_email",
             "language",
             "company",
             "department"
@@ -85,7 +104,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class ContactsInfoSerializer(serializers.ModelSerializer):
 
     name = serializers.CharField(source="get_full_name")
-    emails = EmailAddressSerializer(many=True, read_only=True)
+    # emails = EmailAddressSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -93,6 +112,8 @@ class ContactsInfoSerializer(serializers.ModelSerializer):
             "avatar",
             "name",
             "phone",
+            "primary_email",
+            "secondary_email",
             "emails",
             "company",
             "department"

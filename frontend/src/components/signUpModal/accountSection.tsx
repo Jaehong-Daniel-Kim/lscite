@@ -55,7 +55,7 @@ export default function AccountInfoSection({onChange}: IAccountInfoProps) {
     });
     const [usernameValidationMsgOpen, setUsernameValidationMsgOpen] = useState<boolean>(false);
 
-    const handleDataExport = useCallback((data: {username: string, password: string}): void => {
+    const handleDataExport = useCallback((data: {username: string, password: string, primaryEmail: string}): void => {
         onChange("accountInfo", data)
     }, [onChange])
 
@@ -81,9 +81,9 @@ export default function AccountInfoSection({onChange}: IAccountInfoProps) {
                 {
                     minLength: 8,
                     minLowercase: 1,
-                    minUppercase: 0,
+                    minUppercase: 1,
                     minNumbers: 1,
-                    minSymbols: 0,
+                    minSymbols: 1,
                 }
             )) {
                 setPasswordCheckState({...passwordCheckState, password: {...passwordCheckState.password, open: true, checked: true}});
@@ -119,6 +119,7 @@ export default function AccountInfoSection({onChange}: IAccountInfoProps) {
             handleDataExport({
                 username: username.current.value,
                 password: password.current.value,
+                primaryEmail: `${username.current.value}@priemail.com`,
             })
             setIsSectionOpen(false);
         }

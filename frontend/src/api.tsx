@@ -4,7 +4,7 @@ import {
     CheckExistenceFunc,
     LoginFunc,
     PinCodeCheckFunc,
-    PinCodeGenerateFunc,
+    PinCodeGenerateFunc, SignUpFunc,
 } from "./types";
 
 const hostname = window?.location?.hostname;
@@ -12,7 +12,7 @@ const port = window?.location?.port;
 
 const instance = axios.create({
     baseURL: (
-        hostname === "localhost" && port === "8080"
+        hostname === "localhost" && port === "3000"
             ? "http://localhost:8080/api/v1"
             : "http://localhost:6307/api/v1"
     ),
@@ -81,5 +81,13 @@ export const checkPinCode: PinCodeCheckFunc = (pinCode, email) => {
         .then((response) => response.data)
         .catch((error) => {
             return error.response.data
+        })
+}
+
+export const signUp: SignUpFunc = (signUpFormData) => {
+    return instance.post("users/", signUpFormData)
+        .then((response) => response.data)
+        .catch((error) => {
+            return error.reponse.data
         })
 }

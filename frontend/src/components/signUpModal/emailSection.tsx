@@ -186,8 +186,8 @@ export default function EmailInfoSection({onChange}: IEmailInfoProps) {
                                     variant={"filled"}
                                     onChange={handleEmailAddressChange}
                                 >
-                                    <option value={"email1.com"}>email1.com</option>
-                                    <option value={"email2.com"}>email2.com</option>
+                                    <option value={"mydomain.com"}>mydomain.com</option>
+                                    <option value={"yourdomain.com"}>yourdomain.com</option>
                                 </Select>
                             </InputRightElement>
                         </InputGroup>

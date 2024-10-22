@@ -24,15 +24,29 @@ class Users(APIView):
 
     def post(self, request):
         print(request.data)
-        if password := request.data.get("password"):
+        if password := request.data.get("password", None):
             serializer = CreateOrUpdateUserSerializer(data=request.data)
             if serializer.is_valid():
+                # Create User Account
                 new_user = serializer.save()
                 new_user.set_password(password)
                 new_user.save()
-                return Response(CreateOrUpdateUserSerializer(new_user).data)
+                data: dict = CreateOrUpdateUserSerializer(new_user).data
+                return Response({
+                    "status": "success",
+                    "message": "User successfully created.",
+                    "detail": {
+                        "first_name": data["first_name"],
+                        "last_name": data["last_name"],
+                        "username": data["username"],
+                    }
+                }, status=status.HTTP_200_OK)
             else:
-                return Response(serializer.errors)
+                return Response({
+                    "status": "error",
+                    "message": "Wrong input",
+                    "detail": serializer.errors,
+                    }, status=status.HTTP_200_OK)
         else:
             raise ParseError
 
@@ -117,7 +131,6 @@ class CheckExistence(APIView):
 
     API view for searching existence of entities.
     """
-
     def get(self, request):
         print("checking")
         time.sleep(3)
@@ -142,7 +155,7 @@ class CheckExistence(APIView):
                 )
         elif email := request.GET.get("email"):
             print(email)
-            if User.objects.filter(emails__email=email).exists():
+            if User.objects.filter(secondary_email__exact=email).exists():
                 return Response(
                     {
                         "status": "error",
@@ -281,4 +294,9 @@ class ValidatePinCode(APIView):
                     "detail": {},
                 }, status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+class SignUp(APIView):
+    def post(self, request):
+        pass
 

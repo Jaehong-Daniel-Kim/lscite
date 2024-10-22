@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, EmailAddress
+from .models import User
 
 # Register your models here.
 
@@ -29,8 +29,8 @@ class CustomUserAdmin(UserAdmin):
     list_display = [
         "username",
         "get_full_name",
-        "first_email",
-        "second_email",
+        "primary_email",
+        "secondary_email",
         "company",
         "department",
     ]
@@ -49,26 +49,4 @@ class CustomUserAdmin(UserAdmin):
                        ),
         },
          ),
-    )
-
-    def first_email(self, instance):
-        if email := list(instance.emails.all()):
-            return email[0]
-        return None
-
-    def second_email(self, instance):
-        if email := list(instance.emails.all()):
-            if len(email) > 1:
-                return email[1]
-        return None
-
-
-
-
-
-@admin.register(EmailAddress)
-class EmailAddressAdmin(admin.ModelAdmin):
-    list_display = (
-        "user",
-        "email",
     )

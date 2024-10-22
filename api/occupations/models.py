@@ -34,6 +34,7 @@ class Department(CommonModel):
     class DepartmentChoice(models.TextChoices):
         Dept1 = ("dept1", "Dept1")
         Dept2 = ("dept2", "Dept2")
+        Dept3 = ("dept3", "Dept2")
 
     department = models.CharField(max_length=5, choices=DepartmentChoice)
     group = models.CharField(max_length=50)

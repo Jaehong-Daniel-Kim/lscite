@@ -35,27 +35,27 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, password, **extra_fields)
 
 
-class EmailAddress(CommonModel):
-
-    class Meta:
-        db_table = "user_email_addresses"
-
-    class EmailTypeChoice(models.TextChoices):
-        Type1 = ("type1", "Type1")
-        Type2 = ("type2", "Type2")
-
-    user = models.ForeignKey("users.User",
-                             on_delete=models.CASCADE,
-                             related_name="emails")
-    email = models.EmailField(unique=True,
-                              help_text="Required. 254 characters or fewer in [email@domain.com] format",
-                              error_messages={"unique": "A user with that email address already exists"})
-    type = models.CharField(max_length=5,
-                            choices=EmailTypeChoice.choices,
-                            null=True)
-
-    def __str__(self):
-        return self.email
+# class EmailAddress(CommonModel):
+#
+#     class Meta:
+#         db_table = "user_email_addresses"
+#
+#     class EmailTypeChoice(models.TextChoices):
+#         Type1 = ("type1", "Type1")
+#         Type2 = ("type2", "Type2")
+#
+#     user = models.ForeignKey("users.User",
+#                              on_delete=models.CASCADE,
+#                              related_name="emails")
+#     email = models.EmailField(unique=True,
+#                               help_text="Required. 254 characters or fewer in [email@domain.com] format",
+#                               error_messages={"unique": "A user with that email address already exists"})
+#     type = models.CharField(max_length=5,
+#                             choices=EmailTypeChoice.choices,
+#                             null=True)
+#
+#     def __str__(self):
+#         return self.email
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -69,8 +69,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             One Department object can be associated with many User objects,
             but one User can only have one Department object.
 
-    Reverse Accessor
-        : self.emails -> users.EmailAddress
     """
 
     class Meta:
@@ -111,11 +109,12 @@ class User(AbstractBaseUser, PermissionsMixin):
                                    on_delete=models.SET_NULL,
                                    null=True,)
     date_joined = models.DateTimeField(auto_now_add=True)
+    primary_email = models.EmailField(unique=True, default=None, null=True)
+    secondary_email = models.EmailField(unique=True, default=None, null=True)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = "username"
-    EMAIL_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name", "phone"]
 
     def get_full_name(self):
