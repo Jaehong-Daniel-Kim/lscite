@@ -65,8 +65,9 @@ export default function Login() {
 
     return (
         <Container
+            boxShadow={"2xl"}
             backgroundColor={"gray.300"}
-            border={"1px solid"}
+            border={"0.5px solid"}
             m={0}
             paddingBottom={5}
             borderRadius={10}

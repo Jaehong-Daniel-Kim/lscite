@@ -7,15 +7,17 @@ import {
     ModalContent,
     ModalFooter,
     ModalHeader,
-    ModalOverlay, useDisclosure
+    ModalOverlay, Spinner, useDisclosure, useToast
 } from "@chakra-ui/react";
 import BasicInfoSection from "./basicSection";
 import AccountInfoSection from "./accountSection";
-import {useCallback, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {IUser, ISignUpFormInputData, SignUpFormSection} from "../../types";
 import EmailInfoSection from "./emailSection";
 import WarningAlert from "../alertModal/warningAlert";
 import {signUp} from "../../api";
+import {Simulate} from "react-dom/test-utils";
+import submit = Simulate.submit;
 
 interface ISignUpModalProps {
     isOpen: boolean;
@@ -25,6 +27,7 @@ interface ISignUpModalProps {
 
 export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const {isOpen: isAlertOpen, onClose: onAlertClose, onOpen: onAlertOpen} = useDisclosure();
     const [formData, setFormData] = useState<ISignUpFormInputData>({
         basicInfo: {
@@ -44,6 +47,7 @@ export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
             email: "",
         },
     });
+    const toast = useToast()
 
     const handleFormDataUpdate = useCallback((section: SignUpFormSection, data: object): void => {
         setFormData((prev) => ({
@@ -55,7 +59,7 @@ export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
         }));
     }, []);
 
-    const isSignUpFormFilled = useMemo(() => {
+    const isSignUpFormFilled = useMemo<boolean>(() => {
         const { basicInfo, accountInfo, emailInfo } = formData;
 
         const isBasicInfoFilled = Object.values(basicInfo).every((value) => !!value);
@@ -67,6 +71,13 @@ export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
 
     const handleSubmit = useCallback(async() => {
         if (isSignUpFormFilled) {
+            const signUpToast = toast({
+                title: "Loading....",
+                description: "Signing you up",
+                status: "loading",
+                duration: null,
+                isClosable: false,
+            })
             const data: IUser = {
                 first_name: formData.basicInfo.firstName,
                 last_name: formData.basicInfo.lastName,
@@ -81,15 +92,32 @@ export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
                 primary_email: formData.accountInfo.primaryEmail,
                 secondary_email: formData.emailInfo.email,
             };
-            console.log(data)
             const response = await signUp(data);
             const {status, message, detail} = response;
-            console.log(status, message, detail)
+            if (status === "success") {
+                const fullName = `${detail.first_name} ${detail.last_name}`
+                toast.update(signUpToast, {
+                    title: `Hello, ${fullName}`,
+                    description: `You are ready to go as ${detail.username}`,
+                    status: "success",
+                    duration: 8000,
+                    isClosable: true,
+                });
+                onClose();
+            } else {
+                toast.update(signUpToast, {
+                    title: `Error`,
+                    description: message,
+                    status: "error",
+                    duration: 8000,
+                    isClosable: true,
+                });
+            }
         } else {
             onAlertOpen();
         }
 
-    }, [formData, isSignUpFormFilled, onAlertOpen]);
+    }, [formData, toast, isSignUpFormFilled, onAlertOpen]);
 
     return (
         <Modal
@@ -120,7 +148,13 @@ export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
                     />
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={handleSubmit}>Submit</Button>
+                    <Button
+                        colorScheme={"blue"}
+                        onClick={handleSubmit}
+                        minWidth={"21%"}
+                    >
+                        Submit
+                    </Button>
                 </ModalFooter>
             </ModalContent>
             <WarningAlert

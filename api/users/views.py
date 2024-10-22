@@ -23,6 +23,7 @@ class Users(APIView):
     """
 
     def post(self, request):
+        time.sleep(2)
         print(request.data)
         if password := request.data.get("password", None):
             serializer = CreateOrUpdateUserSerializer(data=request.data)

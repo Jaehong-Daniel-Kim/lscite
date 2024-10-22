@@ -39,6 +39,8 @@ export default function EmailInfoSection({onChange}: IEmailInfoProps) {
 
     const [isSectionOpen, setIsSectionOpen] = useState<boolean>(true);
     const verifyEmailButtonRef = useRef<null | HTMLButtonElement>(null);
+    const emailInputRef = useRef<null | HTMLInputElement>(null);
+    const selectRef = useRef<null| HTMLSelectElement>(null);
     const [emailAddress, setEmailAddress] = useState<IEmailAddress>({
        email: "",
        domain: "",
@@ -129,9 +131,11 @@ export default function EmailInfoSection({onChange}: IEmailInfoProps) {
     }, [])
 
     useEffect(() => {
-        if (isEmailVerified && verifyEmailButtonRef.current) {
+        if (isEmailVerified && verifyEmailButtonRef.current && emailInputRef.current && selectRef.current) {
             verifyEmailButtonRef.current.disabled = true;
             verifyEmailButtonRef.current.textContent = "Verified!"
+            emailInputRef.current.disabled = true;
+            selectRef.current.disabled = true;
             handleDataExport();
         }
     }, [isEmailVerified, handleDataExport])
@@ -159,6 +163,7 @@ export default function EmailInfoSection({onChange}: IEmailInfoProps) {
                         <InputGroup>
                             <InputLeftElement children={<Box color={"gray.400"}> <FaEnvelope /> </Box>} />
                             <Input
+                                ref={emailInputRef}
                                 name={"email"}
                                 autoComplete={"off"}
                                 variant={"filled"}
@@ -178,6 +183,7 @@ export default function EmailInfoSection({onChange}: IEmailInfoProps) {
                                 w={"45%"}
                             >
                                 <Select
+                                    ref={selectRef}
                                     borderRadius={0}
                                     name={"domain"}
                                     placeholder={"select domain"}

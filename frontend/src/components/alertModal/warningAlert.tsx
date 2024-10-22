@@ -26,12 +26,13 @@ export default function WarningAlert(
 
     return (
         <AlertDialog
+            size={"lg"}
             leastDestructiveRef={cancelRef}
             isOpen={isAlertOpen}
             onClose={onAlertClose}
         >
             <AlertDialogOverlay />
-            <AlertDialogContent>
+            <AlertDialogContent top={"5rem"}>
                 <AlertDialogHeader fontSize={"lg"} fontWeight={"bold"}>
                     {title}
                 </AlertDialogHeader>
