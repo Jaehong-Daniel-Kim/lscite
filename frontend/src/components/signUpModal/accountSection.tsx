@@ -64,7 +64,7 @@ export default function AccountInfoSection({onChange}: IAccountInfoProps) {
         if (username.current?.value) {
             setIsLoading(true);
             setUsernameValidationMsgOpen(true);
-            const response = await checkExistence({username: username.current.value});
+            const response = await checkExistence({username: username.current.value.toLowerCase()});
             const {status, message,} = response;
             setUsernameCheckState((prev) => (
                 {...prev, status, description: message}
@@ -117,11 +117,11 @@ export default function AccountInfoSection({onChange}: IAccountInfoProps) {
     useEffect((): void => {
         if (isAllFilled && username.current && password.current) {
             handleDataExport({
-                username: username.current.value,
+                username: username.current.value.toLowerCase(),
                 password: password.current.value,
-                primaryEmail: `${username.current.value}@priemail.com`,
+                primaryEmail: `${username.current.value.toLowerCase()}@priemail.com`,
             })
-            setIsSectionOpen(false);
+            // setIsSectionOpen(false);  for auto-close of the section
         }
     }, [isAllFilled, handleDataExport])
 
