@@ -1,3 +1,5 @@
+import {QueryFunctionContext} from "@tanstack/react-query";
+
 export interface IUser {
     avatar?: string;
     username: string;
@@ -77,25 +79,35 @@ export interface ISignupResponseData extends IAPIResponseData {
         secondary_email?: string;
     }
 }
+export interface IOccupationTeam {
+    id: number;
+    name: string;
+}
+export interface IOccupationGroup {
+    id: number;
+    name: string;
+    team: IOccupationTeam[];
+}
 
-// export interface ISignUpFormData {
-//     firstName: string;
-//     lastName: string;
-//     company : {
-//         name: string;
-//     }
-//     department: {
-//         department: string;
-//         group: string;
-//         team: string;
-//     }
-//     username: string;
-//     password: string;
-//     primaryEmail: string;
-//     secondaryEmail: string;
-// }
+export interface IOccupationDepartment {
+    id: number;
+    name: string;
+    group: IOccupationGroup[];
+}
+
+export interface IOccupationCompany {
+    id: number;
+    name: string;
+    department: IOccupationDepartment[];
+}
+
+export interface IOccupationTreeResponseData extends IAPIResponseData {
+    detail: IOccupationCompany[];
+}
+
 export type CheckExistenceFunc = (target: object) => Promise<IAPIResponseData>
 export type PinCodeGenerateFunc = (email: string)  => Promise<IPinCodeGenerateResponseData>
 export type PinCodeCheckFunc = (username: string, email: string) => Promise<IAPIResponseData>
 export type LoginFunc = (username: string, password: string) => Promise<IAPIResponseData>
 export type SignUpFunc = (signUpFormData: ISignUpFormData) => Promise<ISignupResponseData>
+export type OccupationFunc = ({queryKey}: QueryFunctionContext) => Promise<IOccupationTreeResponseData>

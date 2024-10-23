@@ -17,6 +17,12 @@ import {BiSolidInstitution} from "react-icons/bi";
 import {TbBinaryTree2} from "react-icons/tb";
 import {GrGroup} from "react-icons/gr";
 import {AiOutlineTeam} from "react-icons/ai";
+import {
+    IOccupationCompany,
+    IOccupationDepartment,
+    IOccupationGroup,
+    IOccupationTeam,
+} from "../../types";
 
 
 type SelectChangeEvent = React.ChangeEvent<HTMLSelectElement>
@@ -26,19 +32,32 @@ type InputFocusEvent = React.FocusEvent<HTMLInputElement>
 type SectionName = "basicInfo"
 interface IBasicInfoProps {
     onChange: (SignUpSection: SectionName, data: object) => void;
+    occupationTree: IOccupationCompany[] | undefined;
 }
 
-export default function BasicInfoSection({onChange}: IBasicInfoProps) {
-
+export default function BasicInfoSection({onChange, occupationTree}: IBasicInfoProps) {
     const [isSectionOpen, setIsSectionOpen] = useState<boolean>(true);
     const firstName = useRef<null | HTMLInputElement>(null);
     const lastName = useRef<null | HTMLInputElement>(null);
-    const [selectData, setSelectData] = useState<Record<string, string>>({
-        company: "",
-        department: "",
-        group: "",
-        team: "",
+    const [selectData, setSelectData] = useState<Record<string, number>>({
+        company: 0,
+        department: 0,
+        group: 0,
+        team: 0,
     });
+    console.log(selectData)
+
+    const departments = useMemo<IOccupationDepartment[] | undefined>(() => {
+        return occupationTree?.find((company) => company.id === selectData.company)?.department;
+    }, [selectData.company, occupationTree])
+
+    const groups = useMemo<IOccupationGroup[] | undefined>(() => {
+        return departments?.find((department) => department.id === selectData.department)?.group;
+    }, [selectData.department, departments])
+
+    const teams = useMemo<IOccupationTeam[] | undefined>(() => {
+        return groups?.find((group) => group.id === selectData.group)?.team;
+    }, [selectData.group, groups])
 
     const handleDataExport = useCallback((e: SelectFocusEvent | InputFocusEvent): void => {
         const {name, value} = e.target
@@ -47,11 +66,16 @@ export default function BasicInfoSection({onChange}: IBasicInfoProps) {
 
     const handleSelectDataChange = useCallback((e: SelectChangeEvent): void => {
         const {name, value} = e.target
-        setSelectData((prev) => ({...prev, [name]: value}));
+        const newValue = value === "" ? "0" : value
+        setSelectData((prev) => ({...prev, [name]: parseInt(newValue)}));
     }, [])
 
+    /*
+    The commented functions below manage auto-close functionality of the section.
+    It is still in development
+
     const isAllSelected = useMemo<boolean>(() => {
-        return Object.values(selectData).every((value) => value.length > 0)
+        return Object.values(selectData).every((value) => value > 0)
     }, [selectData])
 
     const checkSectionOpenState = useCallback((): void => {
@@ -64,6 +88,7 @@ export default function BasicInfoSection({onChange}: IBasicInfoProps) {
     useEffect((): void => {
         checkSectionOpenState();
     }, [checkSectionOpenState])
+    */
 
     return (
         <>
@@ -129,87 +154,102 @@ export default function BasicInfoSection({onChange}: IBasicInfoProps) {
                                 name={"company"}
                                 placeholder={"Select Company"}
                                 size={"md"}
-                                color={selectData.company?.length <= 0 ? "gray.500" : ""}
+                                color={selectData.company <= 0 ? "gray.500" : ""}
                                 variant={"filled"}
                                 value={selectData.company}
                                 onChange={handleSelectDataChange}
                                 onBlur={handleDataExport}
+                                isDisabled={!occupationTree}
                             >
-                                <option value={"company1"}>company1</option>
-                                <option value={"company2"}>company2</option>
-                                <option value={"company3"}>company3</option>
+                                {
+                                    occupationTree?.map((company) => (
+                                        <option key={company.id} value={company.id}>{company.name}</option>
+                                    ))
+                                }
                             </Select>
                         </HStack>
                     </Tooltip>
 
                     {/*Select Department*/}
-                    <Tooltip label={"Select department"} placement={"left"} >
-                        <HStack w={"100%"} bg={"gray.100"} gap={0}>
-                            <Box color={"gray.400"} paddingLeft={3}>
-                                <TbBinaryTree2 />
-                            </Box>
-                            <Select
-                                name={"department"}
-                                placeholder={"Select Department"}
-                                size={"md"}
-                                color={selectData.department?.length <= 0 ? "gray.500" : ""}
-                                variant={"filled"}
-                                value={selectData.department}
-                                onChange={handleSelectDataChange}
-                                onBlur={handleDataExport}
-                            >
-                                <option value={"dept1"}>dept1</option>
-                                <option value={"dept2"}>dept2</option>
-                                <option value={"dept3"}>dept3</option>
-                            </Select>
-                        </HStack>
-                    </Tooltip>
+                    <Box as={Collapse} in={(departments?.length as number) > 0} w={"100%"} animateOpacity>
+                        <Tooltip label={"Select department"} placement={"left"} >
+                            <HStack w={"100%"} bg={"gray.100"} gap={0}>
+                                <Box color={"gray.400"} paddingLeft={3}>
+                                    <TbBinaryTree2 />
+                                </Box>
+                                <Select
+                                    name={"department"}
+                                    placeholder={"Select Department"}
+                                    size={"md"}
+                                    color={selectData.department <= 0 ? "gray.500" : ""}
+                                    variant={"filled"}
+                                    value={selectData.department}
+                                    onChange={handleSelectDataChange}
+                                    onBlur={handleDataExport}
+                                >
+                                    {
+                                        departments?.map((department) => (
+                                            <option key={department.id} value={department.id}>{department.name}</option>
+                                        ))
+                                    }
+                                </Select>
+                            </HStack>
+                        </Tooltip>
+                    </Box>
 
                     {/*Group*/}
-                    <Tooltip label={"Select group"} placement={"left"} >
-                        <HStack w={"100%"} bg={"gray.100"} gap={0}>
-                            <Box color={"gray.400"} paddingLeft={3}>
-                                <GrGroup />
-                            </Box>
-                            <Select
-                                name={"group"}
-                                placeholder={"Select Group"}
-                                size={"md"}
-                                color={selectData.group?.length <= 0 ? "gray.500" : ""}
-                                variant={"filled"}
-                                value={selectData.group}
-                                onChange={handleSelectDataChange}
-                                onBlur={handleDataExport}
-                            >
-                                <option value={"group1"}>group1</option>
-                                <option value={"group2"}>group2</option>
-                                <option value={"group3"}>group3</option>
-                            </Select>
-                        </HStack>
-                    </Tooltip>
+                    <Box as={Collapse} in={(groups?.length as number) > 0} w={"100%"} animateOpacity>
+                        <Tooltip label={"Select group"} placement={"left"} >
+                            <HStack w={"100%"} bg={"gray.100"} gap={0}>
+                                <Box color={"gray.400"} paddingLeft={3}>
+                                    <GrGroup />
+                                </Box>
+                                <Select
+                                    name={"group"}
+                                    placeholder={"Select Group"}
+                                    size={"md"}
+                                    color={selectData.group <= 0 ? "gray.500" : ""}
+                                    variant={"filled"}
+                                    value={selectData.group}
+                                    onChange={handleSelectDataChange}
+                                    onBlur={handleDataExport}
+                                >
+                                    {
+                                        groups?.map((group) => (
+                                            <option key={group.id} value={group.id}>{group.name}</option>
+                                        ))
+                                    }
+                                </Select>
+                            </HStack>
+                        </Tooltip>
+                    </Box>
 
                     {/*team*/}
-                    <Tooltip label={"Select team"} placement={"left"} >
-                        <HStack w={"100%"} bg={"gray.100"} gap={0}>
-                            <Box color={"gray.400"} paddingLeft={3}>
-                                <AiOutlineTeam />
-                            </Box>
-                            <Select
-                                name={"team"}
-                                placeholder={"Select Team"}
-                                size={"md"}
-                                color={selectData.team?.length <= 0 ? "gray.500" : ""}
-                                variant={"filled"}
-                                value={selectData.team}
-                                onChange={handleSelectDataChange}
-                                onBlur={handleDataExport}
-                            >
-                                <option value={"team1"}>team1</option>
-                                <option value={"team2"}>team2</option>
-                                <option value={"team3"}>team3</option>
-                            </Select>
-                        </HStack>
-                    </Tooltip>
+                    <Box as={Collapse} in={(teams?.length as number) > 0} w={"100%"} animateOpacity>
+                        <Tooltip label={"Select team"} placement={"left"} >
+                            <HStack w={"100%"} bg={"gray.100"} gap={0}>
+                                <Box color={"gray.400"} paddingLeft={3}>
+                                    <AiOutlineTeam />
+                                </Box>
+                                <Select
+                                    name={"team"}
+                                    placeholder={"Select Team"}
+                                    size={"md"}
+                                    color={selectData.team <= 0 ? "gray.500" : ""}
+                                    variant={"filled"}
+                                    value={selectData.team}
+                                    onChange={handleSelectDataChange}
+                                    onBlur={handleDataExport}
+                                >
+                                    {
+                                        teams?.map((team) => (
+                                            <option key={team.id} value={team.id}>{team.name}</option>
+                                        ))
+                                    }
+                                </Select>
+                            </HStack>
+                        </Tooltip>
+                    </Box>
                 </VStack>
             </Collapse>
         </>

@@ -45,6 +45,7 @@ class Group(CommonModel):
     def __str__(self):
         return self.name
 
+
 class Team(CommonModel):
 
     class Meta:
@@ -62,13 +63,16 @@ class Team(CommonModel):
 
 class Occupation(CommonModel):
 
+    class Meta:
+        db_table = "user_occupation"
+
     user = models.OneToOneField("users.User",
                                 on_delete=models.CASCADE,
                                 related_name="occupation")
     company = models.ForeignKey(Company, on_delete=models.CASCADE,)
     department = models.ForeignKey(Department, on_delete=models.CASCADE,)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE,)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE,)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True,)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.get_full_name()}: {self.company}|{self.department}|{self.group}|{self.team}"

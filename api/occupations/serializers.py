@@ -3,28 +3,31 @@ from rest_framework import serializers
 from .models import Company, Department, Group, Team, Occupation
 
 
-class CompanySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Company
-        fields = ("name",)
-
-
-class DepartmentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Department
-        fields = ("name",)
-
-
-class GroupSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Group
-        fields = ("name",)
-
-
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
-        fields = ("name",)
+        fields = ("id", "name",)
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    team = TeamSerializer(many=True)
+    class Meta:
+        model = Group
+        fields = ("id", "name", "team")
+
+
+class DepartmentSerializer(serializers.ModelSerializer):
+    group = GroupSerializer(many=True)
+    class Meta:
+        model = Department
+        fields = ("id", "name", "group")
+
+
+class CompanySerializer(serializers.ModelSerializer):
+    department = DepartmentSerializer(many=True)
+    class Meta:
+        model = Company
+        fields = ("id", "name", "department")
 
 
 class OccupationSerializer(serializers.ModelSerializer):

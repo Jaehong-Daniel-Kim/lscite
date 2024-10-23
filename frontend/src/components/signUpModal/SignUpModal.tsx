@@ -7,7 +7,7 @@ import {
     ModalContent,
     ModalFooter,
     ModalHeader,
-    ModalOverlay, Spinner, useDisclosure, useToast
+    ModalOverlay, Spinner, Text, useDisclosure, useToast
 } from "@chakra-ui/react";
 import BasicInfoSection from "./basicSection";
 import AccountInfoSection from "./accountSection";
@@ -15,9 +15,8 @@ import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {IUser, ISignUpFormInputData, SignUpFormSection} from "../../types";
 import EmailInfoSection from "./emailSection";
 import WarningAlert from "../alertModal/warningAlert";
-import {signUp} from "../../api";
-import {Simulate} from "react-dom/test-utils";
-import submit = Simulate.submit;
+import {getOccupationTree, signUp} from "../../api";
+import {useQuery} from "@tanstack/react-query";
 
 interface ISignUpModalProps {
     isOpen: boolean;
@@ -27,6 +26,7 @@ interface ISignUpModalProps {
 
 export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
 
+    const {isLoading: isOccupationTreeLoading, data: occupationTree, isError: isOccupationTreeError} = useQuery({queryKey: ["occupationTree"], queryFn: getOccupationTree})
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const {isOpen: isAlertOpen, onClose: onAlertClose, onOpen: onAlertOpen} = useDisclosure();
     const [formData, setFormData] = useState<ISignUpFormInputData>({
@@ -117,7 +117,7 @@ export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
             onAlertOpen();
         }
 
-    }, [formData, toast, isSignUpFormFilled, onAlertOpen]);
+    }, [formData, toast, isSignUpFormFilled, onAlertOpen, onClose]);
 
     return (
         <Modal
@@ -132,26 +132,37 @@ export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
                 <ModalCloseButton />
 
                 <ModalBody>
+                    {
+                        isOccupationTreeLoading
+                            ? <Spinner size={"xl"} justifySelf={"center"}/>
+                            : occupationTree?.status === "success"
+                                ? <>
+                                    <BasicInfoSection
+                                        onChange={handleFormDataUpdate}
+                                        occupationTree={occupationTree.detail}
+                                    />
+
+                                    {/*Account Info Section*/}
+                                    <AccountInfoSection
+                                        onChange={handleFormDataUpdate}
+                                    />
+
+                                    {/*Email Info Section*/}
+                                    <EmailInfoSection
+                                        onChange={handleFormDataUpdate}
+                                    />
+                                </>
+                                : <Text size={"lg"}>Something went wrong</Text>
+
+                    }
                     {/*Basic Info Section*/}
-                    <BasicInfoSection
-                        onChange={handleFormDataUpdate}
-                    />
-
-                    {/*Account Info Section*/}
-                    <AccountInfoSection
-                        onChange={handleFormDataUpdate}
-                    />
-
-                    {/*Email Info Section*/}
-                    <EmailInfoSection
-                        onChange={handleFormDataUpdate}
-                    />
                 </ModalBody>
                 <ModalFooter>
                     <Button
                         colorScheme={"blue"}
                         onClick={handleSubmit}
                         minWidth={"21%"}
+                        isDisabled={occupationTree?.status !== "success"}
                     >
                         Submit
                     </Button>

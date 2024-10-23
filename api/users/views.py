@@ -9,7 +9,7 @@ from rest_framework import status
 from rest_framework.exceptions import ParseError, NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import CreateOrUpdateUserSerializer, ProfileSerializer, TinyUserSerializer
+from .serializers import CreateOrUpdateUserSerializer, ProfileSerializer
 from occupations.serializers import OccupationSerializer, OccupationDetailSerializer
 from occupations.models import Company, Department, Group, Team
 from .models import User
@@ -26,22 +26,15 @@ class Users(APIView):
     API view for creating new users
     """
 
-    def get_occupation_pk(self, data: dict):
-        # Users will select each data from the list given to them
-        # Thus, receiving malformed occupation data is not expected.
-        company = Company.objects.get(name=data["company"])
-        department = Department.objects.get(name=data["department"], company=company)
-        group = Group.objects.get(name=data["group"], department=department)
-        team = Team.objects.get(name=data["team"], group=group)
-
-        return {"company": company.pk, "department": department.pk, "group": group.pk, "team": team.pk}
-
     def post(self, request):
         print(request.data)
-        occupation_pk_data = self.get_occupation_pk(request.data.pop("occupation"))
+        # occupation_pk_data = self.get_occupation_pk(request.data.pop("occupation"))
+        occupation_data = request.data.pop("occupation")
+        occupation_data = {key: value if int(value) > 0 else None
+                           for (key, value) in occupation_data.items()}
         # serializers
         user_serializer = CreateOrUpdateUserSerializer(data=request.data)
-        occupation_serializer = OccupationSerializer(data=occupation_pk_data)
+        occupation_serializer = OccupationSerializer(data=occupation_data)
         try:
             with transaction.atomic():
                 # new user

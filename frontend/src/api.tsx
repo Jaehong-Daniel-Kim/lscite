@@ -2,10 +2,11 @@ import axios from "axios";
 import Cookie from "js-cookie"
 import {
     CheckExistenceFunc,
-    LoginFunc,
+    LoginFunc, OccupationFunc,
     PinCodeCheckFunc,
     PinCodeGenerateFunc, SignUpFunc,
 } from "./types";
+import {QueryFunctionContext} from "@tanstack/react-query";
 
 const hostname = window?.location?.hostname;
 const port = window?.location?.port;
@@ -18,6 +19,14 @@ const instance = axios.create({
     ),
     withCredentials: true,  // without this, "Authentication credentials were not provided" will be raised
 })
+
+// Get Occupation Selections
+
+export const getOccupationTree: OccupationFunc  = ({queryKey}) => {
+    return instance.get("occupations")
+        .then((response) => response.data)
+        .catch((error) => error.response.data)
+}
 
 export const getMe = () => {
     return instance.get("users/me")
