@@ -81,8 +81,8 @@ export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
             const data: IUser = {
                 first_name: formData.basicInfo.firstName,
                 last_name: formData.basicInfo.lastName,
-                company: {name: formData.basicInfo.company},
-                department: {
+                occupation: {
+                    company: formData.basicInfo.company,
                     department: formData.basicInfo.department,
                     group: formData.basicInfo.group,
                     team: formData.basicInfo.team,

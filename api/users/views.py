@@ -1,13 +1,17 @@
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
 import random
+
+from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import ParseError, NotFound
+from rest_framework.exceptions import ParseError, NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import CreateOrUpdateUserSerializer, ProfileSerializer
+from .serializers import CreateOrUpdateUserSerializer, ProfileSerializer, TinyUserSerializer
+from occupations.serializers import OccupationSerializer, OccupationDetailSerializer
+from occupations.models import Company, Department, Group, Team
 from .models import User
 import time
 
@@ -22,34 +26,50 @@ class Users(APIView):
     API view for creating new users
     """
 
+    def get_occupation_pk(self, data: dict):
+        # Users will select each data from the list given to them
+        # Thus, receiving malformed occupation data is not expected.
+        company = Company.objects.get(name=data["company"])
+        department = Department.objects.get(name=data["department"], company=company)
+        group = Group.objects.get(name=data["group"], department=department)
+        team = Team.objects.get(name=data["team"], group=group)
+
+        return {"company": company.pk, "department": department.pk, "group": group.pk, "team": team.pk}
+
     def post(self, request):
-        time.sleep(2)
         print(request.data)
-        if password := request.data.get("password", None):
-            serializer = CreateOrUpdateUserSerializer(data=request.data)
-            if serializer.is_valid():
-                # Create User Account
-                new_user = serializer.save()
-                new_user.set_password(password)
+        occupation_pk_data = self.get_occupation_pk(request.data.pop("occupation"))
+        # serializers
+        user_serializer = CreateOrUpdateUserSerializer(data=request.data)
+        occupation_serializer = OccupationSerializer(data=occupation_pk_data)
+        try:
+            with transaction.atomic():
+                # new user
+                user_serializer.is_valid(raise_exception=True)
+                occupation_serializer.is_valid(raise_exception=True)
+                new_user = user_serializer.save()
+                new_user.set_password(request.data["password"])
                 new_user.save()
-                data: dict = CreateOrUpdateUserSerializer(new_user).data
+                # link occupation
+                occupation_serializer.save(user=new_user)
+                new_data = ProfileSerializer(new_user).data
                 return Response({
                     "status": "success",
                     "message": "User successfully created.",
                     "detail": {
-                        "first_name": data["first_name"],
-                        "last_name": data["last_name"],
-                        "username": data["username"],
+                        "first_name": new_data["first_name"],
+                        "last_name": new_data["last_name"],
+                        "username": new_data["username"],
+                        "occupation": new_data["occupation"]
                     }
                 }, status=status.HTTP_200_OK)
-            else:
-                return Response({
-                    "status": "error",
-                    "message": "Wrong input",
-                    "detail": serializer.errors,
-                    }, status=status.HTTP_200_OK)
-        else:
-            raise ParseError
+
+        except ValidationError as e:
+            return Response({
+                "status": "error",
+                "message": "Something went wrong",
+                "detail": e.detail,
+            }, status=status.HTTP_200_OK)
 
 
 class LogIn(APIView):

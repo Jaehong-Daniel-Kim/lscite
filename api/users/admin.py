@@ -31,8 +31,7 @@ class CustomUserAdmin(UserAdmin):
         "get_full_name",
         "primary_email",
         "secondary_email",
-        "company",
-        "department",
+        "occupation",
     ]
 
     readonly_fields = ["date_joined", "last_login"]

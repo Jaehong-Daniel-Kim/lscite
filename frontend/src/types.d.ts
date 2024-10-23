@@ -1,11 +1,3 @@
-export interface IDepartment {
-    department: string;
-    group: string;
-    team: string;
-}
-export interface ICompany {
-    name: string;
-}
 export interface IUser {
     avatar?: string;
     username: string;
@@ -16,8 +8,12 @@ export interface IUser {
     primary_email: string;
     secondary_email: string;
     language?: string;
-    company: ICompany;
-    department: IDepartment;
+    occupation: {
+        company: string;
+        department: string;
+        group: string;
+        team: string;
+    }
 }
 
 export interface IMailbox {

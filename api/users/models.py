@@ -100,14 +100,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     avatar = models.ImageField(upload_to="avatars", blank=True)
     phone = models.CharField(max_length=20, null=True, blank=True)
     language = models.CharField(max_length=2, choices=LanguageChoices.choices, default="en")
-    company = models.ForeignKey("occupations.Company",
-                                related_name="users",
-                                on_delete=models.SET_NULL,
-                                null=True,)
-    department = models.ForeignKey("occupations.Department",
-                                   related_name="users",
-                                   on_delete=models.SET_NULL,
-                                   null=True,)
+    # company = models.ForeignKey("occupations.Company",
+    #                             related_name="users",
+    #                             on_delete=models.SET_NULL,
+    #                             null=True,)
+    # department = models.ForeignKey("occupations.Department",
+    #                                related_name="users",
+    #                                on_delete=models.SET_NULL,
+    #                                null=True,)
     date_joined = models.DateTimeField(auto_now_add=True)
     primary_email = models.EmailField(unique=True, default=None, null=True)
     secondary_email = models.EmailField(unique=True, default=None, null=True)

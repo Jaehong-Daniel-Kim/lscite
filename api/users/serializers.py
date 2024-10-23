@@ -1,8 +1,9 @@
+from occupations.serializers import OccupationDetailSerializer
 from .models import User
-from occupations.models import Department, Company
+from occupations.models import Occupation
 from django.contrib.auth import password_validation as validators
 from rest_framework import serializers
-from occupations.serializers import DepartmentSerializer, CompanySerializere
+# from occupations.serializers import DepartmentSerializer, CompanySerializere
 
 
 class TinyUserSerializer(serializers.ModelSerializer):
@@ -16,19 +17,7 @@ class TinyUserSerializer(serializers.ModelSerializer):
         )
 
 
-# class EmailAddressSerializer(serializers.ModelSerializer):
-#
-#     class Meta:
-#         model = EmailAddress
-#         fields = (
-#             "type",
-#             "email",
-#         )
-
-
 class CreateOrUpdateUserSerializer(serializers.ModelSerializer):
-    company = CompanySerializere()
-    department = DepartmentSerializer()
 
     class Meta:
         model = User
@@ -39,8 +28,6 @@ class CreateOrUpdateUserSerializer(serializers.ModelSerializer):
             "password",
             "primary_email",
             "secondary_email",
-            "company",
-            "department",
             "phone",
         )
 
@@ -48,24 +35,23 @@ class CreateOrUpdateUserSerializer(serializers.ModelSerializer):
         validators.validate_password(password=value)
         return value
 
-    def create(self, validated_data):
-        company = validated_data.pop("company")
-        department = validated_data.pop("department")
-        company_instance = Company.objects.create(**company)
-        department_instance = Department.objects.create(**department)
-        validated_data.update({
-            "company": company_instance,
-            "department": department_instance,
-        })
-        return User(**validated_data)
-
-
+    # def create(self, validated_data):
+    #     occupation: dict = validated_data.pop("occupation")
+    #     occupation_instance = Occupation.objects.filter(**occupation)
+    #     # company = validated_data.pop("company")
+    #     # department = validated_data.pop("department")
+    #     # company_instance = Company.objects.create(**company)
+    #     # department_instance = Department.objects.create(**department)
+    #     validated_data.update({
+    #         "occupation": occupation_instance,
+    #         # "company": company_instance,
+    #         # "department": department_instance,
+    #     })
+    #     return User(**validated_data)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-
-    company = CompanySerializere()
-    department = DepartmentSerializer()
+    occupation = OccupationDetailSerializer()
 
     class Meta:
         model = User
@@ -78,27 +64,26 @@ class ProfileSerializer(serializers.ModelSerializer):
             "primary_email",
             "secondary_email",
             "language",
-            "company",
-            "department"
+            "occupation"
         )
 
-    def update(self, instance, validated_data):
-        company_data: dict = validated_data.pop("company", None)
-        department_data: dict = validated_data.pop("department", None)
+    # def update(self, instance, validated_data):
+    #     company_data: dict = validated_data.pop("company", None)
+    #     department_data: dict = validated_data.pop("department", None)
+    #
+    #     for attr, value in validated_data:
+    #         setattr(instance, attr, value)
 
-        for attr, value in validated_data:
-            setattr(instance, attr, value)
+        # if company_data:
+        #     new_company, created = Company.objects.get_or_create(**company_data)
+        #     instance.company = new_company
+        # if department_data:
+        #     print(department_data)
+        #     new_department, created = Department.objects.get_or_create(**department_data)
+        #     instance.department = new_department
 
-        if company_data:
-            new_company, created = Company.objects.get_or_create(**company_data)
-            instance.company = new_company
-        if department_data:
-            print(department_data)
-            new_department, created = Department.objects.get_or_create(**department_data)
-            instance.department = new_department
-
-        instance.save()
-        return instance
+        # instance.save()
+        # return instance
 
 
 class ContactsInfoSerializer(serializers.ModelSerializer):
@@ -115,8 +100,6 @@ class ContactsInfoSerializer(serializers.ModelSerializer):
             "primary_email",
             "secondary_email",
             "emails",
-            "company",
-            "department"
         )
 
 
