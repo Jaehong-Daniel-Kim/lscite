@@ -32,6 +32,7 @@ export default function Home() {
         <>
             <Header />
             <HStack
+                w={"100%"}
                 position={"relative"}
                 gap={0}
             >

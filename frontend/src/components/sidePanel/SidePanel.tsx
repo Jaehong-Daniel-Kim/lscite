@@ -97,7 +97,6 @@ export default function SidePanel() {
                     <chakra.span display={"block"} width={"2px"} h={"2px"} bgColor={"#5a5a5a"} />
                     <chakra.span display={"block"} width={"2px"} h={"2px"} bgColor={"#5a5a5a"} />
                 </Box>
-
             </Box>
         </HStack>
     )

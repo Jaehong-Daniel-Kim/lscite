@@ -7,11 +7,11 @@ import {
     useColorModeValue,
     VStack
 } from "@chakra-ui/react";
-import {ImMail3} from "react-icons/im";
 import {FaMoon, FaSun} from "react-icons/fa";
 import React from "react";
 import useUser from "../../lib/useUser";
 import {logOut} from "../../api";
+import {IoIosMail} from "react-icons/io";
 
 interface IHeaderNav {
     href: string;
@@ -21,16 +21,9 @@ interface IHeaderNav {
 export default function Header() {
 
     const { isUserLoading, isUserLoggedIn, user } = useUser();
-
     const {toggleColorMode} = useColorMode();
-    const logoColor = useColorModeValue("red.500", "red.200");
+    const logoColor = useColorModeValue("black", "white");
     const Icon = useColorModeValue(FaMoon, FaSun);
-
-    const HeaderNavigation = ({href, text}: IHeaderNav) =>  (
-        <Link href={`${href}`}>
-            <Text fontSize={"md"} as={"b"} _hover={{cursor: "pointer", color: "crimson"}}>{text}</Text>
-        </Link>
-    );
 
     const onLogOut = async () => {
         await logOut()
@@ -39,26 +32,26 @@ export default function Header() {
     return (
         <VStack
             justifyContent={"space-between"}
-            paddingTop={"7"}
-            paddingBottom={"5"}
-            px={"5"}
+            paddingTop={3}
+            paddingBottom={5}
+            px={6}
             borderBottomWidth={1}
             w={"100vw"}
-            h={"130px"}
+            h={"100px"}
             position={"relative"}
         >
             <HStack
                 w={"100%"}
                 justifyContent={"space-between"}
-                px={"5"}
-                id={"hstack"}
+                px={5}
             >
                 {/* Logo */}
-                <Box color={logoColor}>
+                <HStack color={logoColor}>
+                    <Text fontWeight={500} fontSize={"lg"}>Mail Service</Text>
                     <Link href={"/"}>
-                        <ImMail3 size={"36"}/>
+                        <IoIosMail size={"36"}/>
                     </Link>
-                </Box>
+                </HStack>
 
                 {/* Color Mode & User Badge */}
                 <HStack spacing={"2.5px"}>
@@ -72,7 +65,7 @@ export default function Header() {
                     {/* User Badge */}
                     <Menu>
                         <MenuButton>
-                            <Avatar name={user?.username} src={user?.avatar} size={"md"}/>
+                            <Avatar name={user?.username} src={user?.avatar} size={"sm"}/>
                         </MenuButton>
                         <MenuList>
                             <Link href={"/"}>
@@ -86,13 +79,17 @@ export default function Header() {
             {/*Navigation Menus*/}
             <HStack
                 w={"100%"}
-                py={"2"}
-                px={"5"}
-                columnGap={"5"}
+                py={1}
+                px={5}
+                columnGap={5}
             >
-                <HeaderNavigation href={"/"} text={"Home"} />
-                <HeaderNavigation href={"/"} text={"Mail"} />
-                <HeaderNavigation href={"/"} text={"Contacts"} />
+                <Link href={"/"}>
+                    <Box
+                        layerStyle={"activeBottom"}
+                    >
+                        <Text as={"b"} _hover={{cursor: "pointer", color: "crimson"}}>Home</Text>
+                    </Box>
+                </Link>
             </HStack>
         </VStack>
     )
