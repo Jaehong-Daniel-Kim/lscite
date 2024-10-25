@@ -20,7 +20,6 @@ export interface IUser {
 
 export interface IMailbox {
     name: string;
-    description: string;
     unreadMails: string;
 }
 

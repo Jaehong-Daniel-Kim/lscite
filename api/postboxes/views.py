@@ -1,3 +1,5 @@
+import time
+
 from django.shortcuts import render
 from django.db import transaction
 from django.db.utils import IntegrityError

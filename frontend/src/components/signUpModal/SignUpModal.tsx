@@ -112,6 +112,7 @@ export default function SignUpModal({isOpen, onClose}: ISignUpModalProps) {
                     duration: 8000,
                     isClosable: true,
                 });
+                console.log(detail)
             }
         } else {
             onAlertOpen();

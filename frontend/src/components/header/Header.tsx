@@ -20,9 +20,10 @@ interface IHeaderNav {
 
 export default function Header() {
 
+    const headerBgColor = useColorModeValue("blue.500", "blue.200")
     const { isUserLoading, isUserLoggedIn, user } = useUser();
     const {toggleColorMode} = useColorMode();
-    const logoColor = useColorModeValue("black", "white");
+    const logoColor = useColorModeValue("white", "black");
     const Icon = useColorModeValue(FaMoon, FaSun);
 
     const onLogOut = async () => {
@@ -31,6 +32,7 @@ export default function Header() {
 
     return (
         <VStack
+            bg={headerBgColor}
             justifyContent={"space-between"}
             paddingTop={3}
             paddingBottom={5}
@@ -56,10 +58,11 @@ export default function Header() {
                 {/* Color Mode & User Badge */}
                 <HStack spacing={"2.5px"}>
                     {/*Color Mode */}
-                    <IconButton variant={"ghost"}
-                                onClick={toggleColorMode}
-                                aria-label={"Toggle dark mode"}
-                                icon={<Icon/>}
+                    <IconButton
+                        variant={"unstyled"}
+                        onClick={toggleColorMode}
+                        aria-label={"Toggle dark mode"}
+                        icon={<Icon color={logoColor}/>}
                     />
 
                     {/* User Badge */}
@@ -87,7 +90,7 @@ export default function Header() {
                     <Box
                         layerStyle={"activeBottom"}
                     >
-                        <Text as={"b"} _hover={{cursor: "pointer", color: "crimson"}}>Home</Text>
+                        <Text as={"b"} color={logoColor} _hover={{cursor: "pointer", color: "crimson"}}>Home</Text>
                     </Box>
                 </Link>
             </HStack>

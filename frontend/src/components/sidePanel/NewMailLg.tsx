@@ -5,12 +5,11 @@ export default function NewMailLg() {
     return (
         <Button
             leftIcon={<FaRegPenToSquare />}
-            colorScheme={"pink"}
-            marginTop={5}
-            py={"7"}
-            w={"100%"}
-            fontSize={"xl"}
-            borderRadius={"10"}
+            colorScheme={"blue"}
+            py={7}
+            px={6}
+            fontSize={"lg"}
+            borderRadius={10}
             onClick={() => {console.log('clicked')}}
         >
             New Mail

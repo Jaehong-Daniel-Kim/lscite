@@ -10,7 +10,6 @@ class PostboxListSerializer(serializers.ModelSerializer):
         model = Postbox
         fields = (
             "name",
-            "description",
             "unreadMails"
         )
 
@@ -23,7 +22,6 @@ class CreatePostboxSerializer(serializers.ModelSerializer):
         model = Postbox
         fields = (
             "name",
-            "description",
             "user"
         )
 
@@ -34,5 +32,4 @@ class PostboxDetailSerializer(serializers.ModelSerializer):
         model = Postbox
         fields = (
             "name",
-            "description",
         )

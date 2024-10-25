@@ -9,7 +9,6 @@ class PostBoxAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "user",
-        "description",
         "total_mails",
         "unread_mails",
     )

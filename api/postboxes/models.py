@@ -24,7 +24,6 @@ class Postbox(CommonModel):
         ]
 
     name = models.CharField(max_length=20)
-    description = models.CharField(max_length=150, blank=True)
     user = models.ForeignKey("users.User",
                              on_delete=models.CASCADE,
                              related_name="postbox")

@@ -17,6 +17,7 @@ import MailList from "../components/MailList";
 import Header from "../components/header/Header";
 import useUser from "../lib/useUser";
 import SessionErrorModal from "../components/SessionErrorModal";
+import SidePanelV2 from "../components/sidePanel/SidePanelv2";
 
 
 export default function Home() {
@@ -36,7 +37,8 @@ export default function Home() {
                 position={"relative"}
                 gap={0}
             >
-                <SidePanel />
+                {/*<SidePanel />*/}
+                <SidePanelV2 />
 
                 <MailList title={"Inbox"}/>
             </HStack>

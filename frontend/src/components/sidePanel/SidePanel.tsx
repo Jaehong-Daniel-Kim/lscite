@@ -21,7 +21,6 @@ export default function SidePanel() {
     const [isMenuCollapsed, setMenuCollapsed] = useState(false);
 
     const handleMenuCollapse = () => {
-        console.log("clicked")
         setMenuCollapsed((prev) => !prev);
     }
 

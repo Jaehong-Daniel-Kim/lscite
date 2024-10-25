@@ -5,8 +5,8 @@ export default function NewMailSm() {
     return (
         <IconButton
             aria-label={"New Mail"}
-            colorScheme={"pink"}
-            marginTop={5}
+            colorScheme={"blue"}
+            size={"sm"}
         >
             <FaRegPenToSquare />
         </IconButton>

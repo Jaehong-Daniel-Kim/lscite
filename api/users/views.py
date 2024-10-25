@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.exceptions import ParseError, NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 
+from postboxes.serializers import CreatePostboxSerializer
 from .serializers import CreateOrUpdateUserSerializer, ProfileSerializer
 from occupations.serializers import OccupationSerializer, OccupationDetailSerializer
 from occupations.models import Company, Department, Group, Team
@@ -25,6 +26,19 @@ class Users(APIView):
 
     API view for creating new users
     """
+    def _create_occupation(self, data: dict, user: User) -> None:
+        serializer = OccupationSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=user)
+
+    def _create_default_postboxes(self, user: User) -> None:
+        default_postboxes = ("inbox", "sent", "drafts",)
+        data = [
+            {"name": postbox, "user": user} for postbox in default_postboxes
+        ]
+        serializer = CreatePostboxSerializer(data=data, many=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(user=user)
 
     def post(self, request):
         print(request.data)
@@ -32,19 +46,19 @@ class Users(APIView):
         occupation_data = request.data.pop("occupation")
         occupation_data = {key: value if int(value) > 0 else None
                            for (key, value) in occupation_data.items()}
-        # serializers
+        # user serializer
         user_serializer = CreateOrUpdateUserSerializer(data=request.data)
-        occupation_serializer = OccupationSerializer(data=occupation_data)
         try:
             with transaction.atomic():
                 # new user
                 user_serializer.is_valid(raise_exception=True)
-                occupation_serializer.is_valid(raise_exception=True)
                 new_user = user_serializer.save()
                 new_user.set_password(request.data["password"])
                 new_user.save()
-                # link occupation
-                occupation_serializer.save(user=new_user)
+                # create occupation
+                self._create_occupation(occupation_data, new_user)
+                # create default postboxes
+                self._create_default_postboxes(new_user)
                 new_data = ProfileSerializer(new_user).data
                 return Response({
                     "status": "success",
