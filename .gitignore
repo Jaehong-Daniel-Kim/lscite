@@ -186,3 +186,5 @@ uploads/
 
 # Mac
 .DS_Store
+
+deploy.sh
