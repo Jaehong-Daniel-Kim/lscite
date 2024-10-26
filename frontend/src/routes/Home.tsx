@@ -30,10 +30,18 @@ export default function Home() {
     }
 
     return (
-        <>
+        <VStack
+            w={"100%"}
+            h={"100%"}
+            position={"relative"}
+            gap={0}
+
+        >
             <Header />
             <HStack
                 w={"100%"}
+                flex={"1 1 auto"}
+                minH={0}
                 position={"relative"}
                 gap={0}
             >
@@ -42,6 +50,6 @@ export default function Home() {
 
                 <MailList title={"Inbox"}/>
             </HStack>
-        </>
+        </VStack>
     );
 }

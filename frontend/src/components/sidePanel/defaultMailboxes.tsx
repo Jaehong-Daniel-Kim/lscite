@@ -34,6 +34,7 @@ export default function DefaultMailboxes({isMenuCollapsed}: IDefaultMailboxesPro
                     <HStack
                         key={idx}
                         as={Button}
+                        boxSize={7}
                         borderRadius={6}
                         w={"90%"}
                         justifyContent={"center"}
@@ -48,9 +49,9 @@ export default function DefaultMailboxes({isMenuCollapsed}: IDefaultMailboxesPro
                                     </Tooltip>
                                 :
                                     <>
-                                        <Icon as={mailboxIcons[mailbox.name]} />
-                                        <Text w={"100%"} textAlign={"left"} isTruncated>{mailbox.name[0].toUpperCase() + mailbox.name.slice(1)}</Text>
-                                        <Text>{parseInt(mailbox.unreadMails) > 0 ? mailbox.unreadMails : ""}</Text>
+                                        <Icon as={mailboxIcons[mailbox.name]} boxSize={3.5} />
+                                        <Text w={"100%"} textAlign={"left"} fontSize={"sm"} isTruncated>{mailbox.name[0].toUpperCase() + mailbox.name.slice(1)}</Text>
+                                        <Text fontSize={"sm"} color={"gray.500"}>{parseInt(mailbox.unreadMails) > 0 ? mailbox.unreadMails : ""}</Text>
                                     </>
                         }
                     </HStack>

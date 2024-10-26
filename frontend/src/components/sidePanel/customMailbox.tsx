@@ -12,12 +12,14 @@ interface ICustomMailboxProps {
 export default function CustomMailbox({name, unreadMails, isMenuCollapsed}: ICustomMailboxProps) {
     return (
         <HStack
-            px={3}
             as={Button}
-            w={"100%"}
+            boxSize={7}
+            px={2}
+            columnGap={3}
+            w={"95%"}
             justifyContent={"center"}
             variant={"unstyled"}
-            _hover={{cursor: "pointer"}}
+            _hover={{cursor: "pointer", backgroundColor: "gray.200"}}
         >
             {
                 isMenuCollapsed
@@ -27,9 +29,9 @@ export default function CustomMailbox({name, unreadMails, isMenuCollapsed}: ICus
                         </Tooltip>
                     :
                         <>
-                            <Icon as={BsDot} />
-                            <Text w={"100%"} textAlign={"left"} isTruncated>{name[0].toUpperCase() + name.slice(1)}</Text>
-                            <Text>{parseInt(unreadMails) > 0 ? unreadMails : ""}</Text>
+                            <Icon as={BsDot} boxSize={3.5} />
+                            <Text w={"100%"} textAlign={"left"} fontSize={"sm"} isTruncated>{name[0].toUpperCase() + name.slice(1)}</Text>
+                            <Text fontSize={"sm"} color={"gray.500"} >{parseInt(unreadMails) > 0 ? unreadMails : ""}</Text>
                         </>
             }
 

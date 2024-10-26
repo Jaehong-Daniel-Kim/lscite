@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Collapse,
     Divider,
@@ -28,9 +29,6 @@ export default function InnerBoard({isMenuCollapsed}: IInnerBoardProps) {
         <VStack
             w={"100%"}
             h={"100%"}
-            position={"relative"}
-            overflowX={"hidden"}
-            overflowY={"scroll"}
         >
             {/*Default mailboxes*/}
             <DefaultMailboxes isMenuCollapsed={isMenuCollapsed}/>
@@ -48,7 +46,7 @@ export default function InnerBoard({isMenuCollapsed}: IInnerBoardProps) {
                     justifyContent={isMenuCollapsed ? "center" : "space-between"}
                     variant={"unstyled"}
                     onClick={() => setIsOpen((prev) => !prev)}
-                    _hover={{cursor: "pointer"}}
+                    _hover={{cursor: "pointer", color: "blue.400"}}
                 >
                     {
                         isMenuCollapsed
@@ -65,8 +63,8 @@ export default function InnerBoard({isMenuCollapsed}: IInnerBoardProps) {
 
 
             {/*Custom Mailboxes*/}
-            <VStack h={"auto"}>
-                <Collapse in={isOpen} animateOpacity>
+            <Collapse in={isOpen} animateOpacity style={{overflow: "inherit"}}>
+            <VStack w={"100%"}>
                     {
 
                         Array(20).fill(null).map((item, idx) => (
@@ -78,12 +76,14 @@ export default function InnerBoard({isMenuCollapsed}: IInnerBoardProps) {
                             />
                         ))
                     }
-                </Collapse>
             </VStack>
+            </Collapse>
 
             {/*Add new mailbox button*/}
             <HStack
                 px={3}
+                pt={3}
+                pb={5}
                 as={Button}
                 w={"100%"}
                 justifyContent={"center"}

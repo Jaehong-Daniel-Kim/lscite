@@ -15,8 +15,8 @@ export default function SidePanelV2() {
             w={!isMenuCollapsed ? "200px" : "100px"}
             minW={!isMenuCollapsed ? "200px" : "100px"}
             maxW={!isMenuCollapsed ? "200px" : "100px"}
-            h={"100vh"}
-            display={"block"}
+            h={"100%"}
+            rowGap={5}
             position={"relative"}
             bg={sidePanelColor}
         >
@@ -51,7 +51,6 @@ export default function SidePanelV2() {
 
             {/*New mail button*/}
             <HStack
-                marginY={5}
                 w={"100%"}
                 justifyContent={"center"}
             >
@@ -61,7 +60,13 @@ export default function SidePanelV2() {
                         : <NewMailLg />
                 }
             </HStack>
-            <VStack h={"100%"}>
+            <VStack
+                w={"100%"}
+                h={"100%"}
+                position={"relative"}
+                overflowX={"hidden"}
+                overflowY={"scroll"}
+            >
                 <InnerBoard isMenuCollapsed={isMenuCollapsed}/>
             </VStack>
         </VStack>
