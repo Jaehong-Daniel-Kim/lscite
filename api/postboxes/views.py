@@ -3,6 +3,7 @@ import time
 from django.shortcuts import render
 from django.db import transaction
 from django.db.utils import IntegrityError
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.exceptions import NotFound, ParseError, PermissionDenied
 from rest_framework.response import Response
@@ -27,7 +28,16 @@ class Postboxes(APIView):
         try:
             postboxes = Postbox.objects.filter(user=user)
             serializer = PostboxListSerializer(postboxes, many=True)
-            return Response(serializer.data)
+            return Response(
+                {
+                    "status": "success",
+                    "message": "",
+                    "detail": {
+                        "default": [mailbox for mailbox in serializer.data if mailbox["type"] == "default"],
+                        "custom": [mailbox for mailbox in serializer.data if mailbox["type"] == "custom"]
+                    }
+                }, status=status.HTTP_200_OK,
+            )
         except Postbox.DoesNotExist:
             raise NotFound
 
@@ -39,34 +49,53 @@ class Postboxes(APIView):
                 with transaction.atomic():
                     new_postbox = serializer.save(user=user)
             except IntegrityError:
-                raise ParseError("mailbox with the same name already exists")
+                return Response(
+                    {
+                        "status": "error",
+                        "message": "Mailbox with the same name already exists.",
+                        "detail": {},
+                    }, status=status.HTTP_400_BAD_REQUEST,
+                )
             except Exception as e:
-                raise e
-            return Response(CreatePostboxSerializer(new_postbox).data)
+                return Response(
+                    {
+                        "status": "error",
+                        "message": "Something's wrong",
+                        "detail": {
+                            "error": print(e)
+                        },
+                    }, status=status.HTTP_400_BAD_REQUEST,
+                )
+            return Response(
+                {
+                    "status": "success",
+                    "message": "Mailbox successfully created.",
+                    "detail": PostboxListSerializer(new_postbox).data
+                }, status=status.HTTP_200_OK,
+            )
         else:
             return Response(status=HTTP_404_NOT_FOUND)
-
 
 class PostboxesDetail(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def get_object(self, user, postbox):
+    def get_object(self, user, postbox_id):
         try:
-            postbox = Postbox.objects.get(user=user, name=postbox)
+            postbox = Postbox.objects.get(user=user, id=postbox_id)
             return postbox
         except Postbox.DoesNotExist:
             raise NotFound
 
-    def get(self, request, postbox):
+    def get(self, request, postbox_id):
         user = request.user
-        postbox = self.get_object(user, postbox)
+        postbox = self.get_object(user, postbox_id)
         serializer = PostboxDetailSerializer(postbox)
         return Response(serializer.data)
 
-    def put(self, request, postbox):
+    def put(self, request, postbox_id):
         user = request.user
-        postbox = self.get_object(user, postbox)
+        postbox = self.get_object(user, postbox_id)
         serializer = PostboxDetailSerializer(postbox, data=request.data, partial=True)
         # user validation
         if not request.user.is_superuser or postbox.user != request.user:
@@ -77,9 +106,14 @@ class PostboxesDetail(APIView):
         else:
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, postbox):
+    def delete(self, request, postbox_id):
         user = request.user
-        postbox = self.get_object(user, postbox)
+        postbox = self.get_object(user, postbox_id)
         postbox.delete()
-        return Response(status=HTTP_204_NO_CONTENT)
-
+        return Response(
+            {
+                "status": "success",
+                "message": "Successfully removed",
+                "detail": {}
+            }, status=status.HTTP_200_OK,
+        )

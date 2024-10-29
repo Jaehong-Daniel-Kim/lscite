@@ -6,12 +6,12 @@ import {
     HStack,
     IconButton,
     Input,
-    InputGroup,
+    InputGroup, Popover, PopoverAnchor, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverTrigger,
     StackDivider,
     Text, useColorMode, useColorModeValue, useDisclosure,
     VStack
 } from "@chakra-ui/react";
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import SidePanel from "../components/sidePanel/SidePanel";
 import MailList from "../components/MailList";
 import Header from "../components/header/Header";
@@ -21,16 +21,12 @@ import SidePanelV2 from "../components/sidePanel/SidePanelv2";
 
 
 export default function Home() {
-    const {isUserLoading, isUserLoggedIn, user} = useUser()
-    const {isOpen, onClose, onOpen} = useDisclosure()
-
-    const handleOpenModal = () => {
-        console.log("called")
-        onOpen()
-    }
+    const {isUserLoading, isUserLoggedIn, user} = useUser();
+    const {isOpen, onClose, onOpen} = useDisclosure();
 
     return (
         <VStack
+            overflow={"hidden"}
             w={"100%"}
             h={"100%"}
             position={"relative"}
@@ -47,7 +43,6 @@ export default function Home() {
             >
                 {/*<SidePanel />*/}
                 <SidePanelV2 />
-
                 <MailList title={"Inbox"}/>
             </HStack>
         </VStack>

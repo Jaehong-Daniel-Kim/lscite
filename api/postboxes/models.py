@@ -23,7 +23,12 @@ class Postbox(CommonModel):
             UniqueConstraint(fields=["name", "user"], name="unique_inbox")
         ]
 
+    class PostboxTypeChoices(models.TextChoices):
+        DEFAULT = ("default", "Default")
+        CUSTOM = ("custom", "Custom")
+
     name = models.CharField(max_length=20)
+    type = models.CharField(max_length=7, choices=PostboxTypeChoices.choices,)
     user = models.ForeignKey("users.User",
                              on_delete=models.CASCADE,
                              related_name="postbox")

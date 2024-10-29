@@ -9,7 +9,9 @@ class PostboxListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Postbox
         fields = (
+            "id",
             "name",
+            "type",
             "unreadMails"
         )
 
@@ -22,6 +24,7 @@ class CreatePostboxSerializer(serializers.ModelSerializer):
         model = Postbox
         fields = (
             "name",
+            "type",
             "user"
         )
 

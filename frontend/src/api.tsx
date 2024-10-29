@@ -1,10 +1,10 @@
 import axios from "axios";
 import Cookie from "js-cookie"
 import {
-    CheckExistenceFunc,
-    LoginFunc, OccupationFunc,
+    CheckExistenceFunc, GetAllMailBoxFunc,
+    LoginFunc, NewMailboxFunc, OccupationFunc,
     PinCodeCheckFunc,
-    PinCodeGenerateFunc, SignUpFunc,
+    PinCodeGenerateFunc, RemoveMailboxFunc, SignUpFunc,
 } from "./types";
 import {QueryFunctionContext} from "@tanstack/react-query";
 
@@ -68,8 +68,35 @@ export const logIn: LoginFunc = (username, password) => {
         })
 }
 
-export const getMailboxes = () => {
+export const getMailboxes: GetAllMailBoxFunc = () => {
     return instance.get( "postboxes/" ).then((response) => response.data)
+}
+
+export const newMailBox: NewMailboxFunc = (name: string) => {
+    return instance.post(
+        "postboxes/",
+        {
+            name: name,
+            type: "custom",
+        },
+        {
+            headers:
+                {"X-CSRFToken": Cookie.get("csrftoken") || "",}
+        })
+        .then((response) => response.data)
+        .catch((error) => {
+            return error.response.data
+        })
+}
+
+export const removeMailbox: RemoveMailboxFunc = (id: number) => {
+    return instance.delete(
+        `postboxes/${id}`,
+        {
+            headers:
+                {"X-CSRFToken": Cookie.get("csrftoken") || "",}
+        },)
+        .then((response) => response.data)
 }
 
 export const checkExistence: CheckExistenceFunc = (target) => {

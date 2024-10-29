@@ -19,7 +19,9 @@ export interface IUser {
 }
 
 export interface IMailbox {
+    id: number;
     name: string;
+    type: string;
     unreadMails: string;
 }
 
@@ -104,9 +106,24 @@ export interface IOccupationTreeResponseData extends IAPIResponseData {
     detail: IOccupationCompany[];
 }
 
-export type CheckExistenceFunc = (target: object) => Promise<IAPIResponseData>
-export type PinCodeGenerateFunc = (email: string)  => Promise<IPinCodeGenerateResponseData>
-export type PinCodeCheckFunc = (username: string, email: string) => Promise<IAPIResponseData>
-export type LoginFunc = (username: string, password: string) => Promise<IAPIResponseData>
-export type SignUpFunc = (signUpFormData: ISignUpFormData) => Promise<ISignupResponseData>
-export type OccupationFunc = ({queryKey}: QueryFunctionContext) => Promise<IOccupationTreeResponseData>
+export interface IAllMailboxResponseData extends IAPIResponseData {
+    detail: {
+        default: IMailbox[];
+        custom: IMailbox[];
+    }
+}
+
+export interface INewMailboxResponseData extends IAPIResponseData {
+    detail: IMailbox;
+}
+
+
+export type CheckExistenceFunc = (target: object) => Promise<IAPIResponseData>;
+export type PinCodeGenerateFunc = (email: string)  => Promise<IPinCodeGenerateResponseData>;
+export type PinCodeCheckFunc = (username: string, email: string) => Promise<IAPIResponseData>;
+export type LoginFunc = (username: string, password: string) => Promise<IAPIResponseData>;
+export type SignUpFunc = (signUpFormData: ISignUpFormData) => Promise<ISignupResponseData>;
+export type OccupationFunc = ({queryKey}: QueryFunctionContext) => Promise<IOccupationTreeResponseData>;
+export type GetAllMailBoxFunc = () => Promise<IAllMailboxResponseData>
+export type NewMailboxFunc = (name: string) => Promise<INewMailboxResponseData>;
+export type RemoveMailboxFunc = (id: number) => Promise<INewMailboxResponseData>

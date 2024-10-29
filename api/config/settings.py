@@ -51,6 +51,7 @@ CUSTOM_APP = [
 
 THIRD_PARTY = [
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
 ]
 
@@ -146,6 +147,19 @@ AUTH_USER_MODEL = 'users.User'
 
 # Media Root
 MEDIA_ROOT = "uploads/"
+
+# Custom Variables DRF
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
+
+
 
 # django-cors-headers
 # -> add "corsheaders" to thrid-party app

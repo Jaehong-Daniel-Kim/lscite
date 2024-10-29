@@ -34,7 +34,7 @@ class Users(APIView):
     def _create_default_postboxes(self, user: User) -> None:
         default_postboxes = ("inbox", "sent", "drafts",)
         data = [
-            {"name": postbox, "user": user} for postbox in default_postboxes
+            {"name": postbox, "user": user, "type": "default"} for postbox in default_postboxes
         ]
         serializer = CreatePostboxSerializer(data=data, many=True)
         serializer.is_valid(raise_exception=True)

@@ -49,5 +49,5 @@ from .views import Postboxes, PostboxesDetail
 
 urlpatterns = [
     path("", Postboxes.as_view()),  # GET | POST
-    path("<str:postbox>", PostboxesDetail.as_view())  # GET | PUT | DELETE
+    path("<int:postbox_id>", PostboxesDetail.as_view()), # GET | PUT | DELETE
 ]
