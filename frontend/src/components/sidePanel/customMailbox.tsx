@@ -23,6 +23,7 @@ interface ICustomMailboxProps {
 }
 export default function CustomMailbox({mailbox, isMenuCollapsed, setMailboxToRemove}: ICustomMailboxProps) {
 
+    const {isOpen, onClose, onOpen} = useDisclosure();
     const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
 
     return (
@@ -31,8 +32,6 @@ export default function CustomMailbox({mailbox, isMenuCollapsed, setMailboxToRem
             borderRadius={6}
             justifyContent={"center"}
             mx={6}
-            onMouseOver={() => setIsMenuVisible(true)}
-            onMouseOut={() => setIsMenuVisible(false)}
             px={2}
             columnGap={2}
             w={"85%"}
@@ -46,17 +45,28 @@ export default function CustomMailbox({mailbox, isMenuCollapsed, setMailboxToRem
                     </Circle>
                 </Tooltip>
                 :
-                <HStack w={"100%"}>
+                <HStack w={"100%"}
+                    onMouseOver={() => setIsMenuVisible(true)}
+                    onMouseOut={() => setIsMenuVisible(false)}
+                >
                     <HStack
                         w={"90%"}
-                        onClick={() => console.log("clicked")}
                     >
                         <Icon as={BsDot} boxSize={3.5} />
                         <Text w={"100%"} fontWeight={"600"} textAlign={"left"} fontSize={"sm"} isTruncated>{mailbox.name}</Text>
                         <Text fontSize={"sm"} fontWeight={"600"} color={"gray.500"} >{parseInt(mailbox.unreadMails) > 0 ? mailbox.unreadMails : "0"}</Text>
                     </HStack>
-                    <Box as={Collapse} in={isMenuVisible}>
-                        <Menu isLazy>
+                    <Box
+                        w={isMenuVisible || isOpen ? "fit-content" : "0"}
+                        visibility={isMenuVisible || isOpen ? "visible" : "hidden"}
+                    >
+                        <Menu
+                            isLazy
+                            isOpen={isOpen}
+                            onClose={onClose}
+                            onOpen={onOpen}
+                            autoSelect={false}
+                        >
                             <MenuButton
                                 as={IconButton}
                                 aria-label={"Options"}
@@ -66,8 +76,9 @@ export default function CustomMailbox({mailbox, isMenuCollapsed, setMailboxToRem
                             </MenuButton>
                             <Portal>
                                 <MenuList>
-                                    <MenuItem onClick={() => setMailboxToRemove(mailbox.id)}>Delete Mailbox</MenuItem>
-                                    <MenuItem>TBD</MenuItem>
+                                    <MenuItem fontSize={"sm"} onClick={() => setMailboxToRemove(mailbox.id)}>Delete Mailbox</MenuItem>
+                                    <MenuItem fontSize={"sm"}>TBD</MenuItem>
+                                    <MenuItem fontSize={"sm"}>TBD</MenuItem>
                                 </MenuList>
                             </Portal>
                         </Menu>
@@ -76,5 +87,4 @@ export default function CustomMailbox({mailbox, isMenuCollapsed, setMailboxToRem
             }
         </HStack>
     )
-
 }
