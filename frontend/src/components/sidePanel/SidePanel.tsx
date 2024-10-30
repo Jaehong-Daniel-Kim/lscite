@@ -50,7 +50,7 @@ export default function SidePanel() {
                                 />
                             </Tooltip>
                         </HStack>
-                        <NewMailLg />
+                        {/*<NewMailLg />*/}
                     </VStack>
                 ) : (
                     <VStack w={"100%"}>
@@ -62,7 +62,7 @@ export default function SidePanel() {
                                 onClick={handleMenuCollapse}
                             />
                         </Tooltip>
-                        <NewMailSm />
+                        {/*<NewMailSm />*/}
                     </VStack>
 
                 )}

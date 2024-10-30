@@ -4,6 +4,8 @@ import Home from "./routes/Home";
 import NotFound from "./routes/NotFound";
 import Login from "./routes/Login";
 import {getMe} from "./api";
+import ComposeNewEmail from "./components/composeEmail/composeNewEmail";
+import ComposeEmail from "./routes/ComposeEmail";
 
 const router = createBrowserRouter([{
     path: "/",
@@ -45,6 +47,18 @@ const router = createBrowserRouter([{
                 }
             }
         },
+        {
+            path: "compose",
+            element: <ComposeEmail />,
+            loader: async () => {
+                const user = await getMe()
+                if (!user) {
+                    return redirect("/login");
+                } else {
+                    return null;
+                }
+            }
+        }
     ]
 }])
 

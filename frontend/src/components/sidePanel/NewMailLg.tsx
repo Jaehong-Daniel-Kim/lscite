@@ -1,7 +1,11 @@
 import {Button} from "@chakra-ui/react";
 import {FaRegPenToSquare} from "react-icons/fa6";
 
-export default function NewMailLg() {
+interface INewMailProps {
+    onClick: () => void;
+}
+
+export default function NewMailLg({onClick}: INewMailProps) {
     return (
         <Button
             leftIcon={<FaRegPenToSquare />}
@@ -10,7 +14,7 @@ export default function NewMailLg() {
             px={6}
             fontSize={"lg"}
             borderRadius={10}
-            onClick={() => {console.log('clicked')}}
+            onClick={() => onClick()}
         >
             New Mail
         </Button>

@@ -94,6 +94,18 @@ export default function SidePanelV2() {
 
     }, [mailboxToRemove, handleRemoveMailbox]);
 
+    const handleComposeMail = useCallback( () => {
+        const w = window.screen.width * 0.5;
+        const h = window.screen.height * 0.9;
+        const l = window.screen.width / 2 - w / 2
+        const t = window.screen.height / 2 - h / 2;
+        return window.open(
+            'compose',
+            '_blank',
+            `width=${w},height=${h},top=${t},left=${l},toolbar,menubar,scrollbars=true`
+        )
+    }, [])
+
     return (
         <VStack
             borderRight={"0.5px solid gray"}
@@ -142,8 +154,8 @@ export default function SidePanelV2() {
                 >
                     {
                         isMenuCollapsed
-                            ? <NewMailSm />
-                            : <NewMailLg />
+                            ? <NewMailSm onClick={handleComposeMail}/>
+                            : <NewMailLg onClick={handleComposeMail}/>
                     }
                 </HStack>
             </Tooltip>
