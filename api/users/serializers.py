@@ -56,14 +56,15 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
+            "id",
             "avatar",
             "username",
+            "full_name",
             "first_name",
             "last_name",
             "phone",
             "primary_email",
             "secondary_email",
-            "language",
             "occupation"
         )
 

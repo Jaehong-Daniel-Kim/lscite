@@ -1,16 +1,23 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+
+from occupations.models import Occupation
 from .models import User
 
 # Register your models here.
 
 
+class OccupationInline(admin.TabularInline):  # You can also use StackedInline
+    model = Occupation
+    extra = 1  # Number of empty slots to display
+
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
+    inlines = [OccupationInline]  # Add Occupation inline to the User admin
 
     fieldsets = (
         (None, {"fields": ("username", "password")}),
-        ("Personal info", {"fields": ("first_name", "last_name")}),
+        ("Personal info", {"fields": ("first_name", "last_name", "primary_email", "secondary_email")}),
         (
             "Permissions",
             {
@@ -28,7 +35,7 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = [
         "username",
-        "get_full_name",
+        "full_name",
         "primary_email",
         "secondary_email",
         "occupation",
@@ -43,8 +50,6 @@ class CustomUserAdmin(UserAdmin):
                        "username",
                        "password1",
                        "password2",
-                       "company",
-                       "department",
                        ),
         },
          ),

@@ -1,8 +1,10 @@
 import {QueryFunctionContext} from "@tanstack/react-query";
 
 export interface IUser {
+    id?: number;
     avatar?: string;
     username: string;
+    full_name?: string;
     first_name: string;
     last_name: string;
     phone?: string;
@@ -117,6 +119,14 @@ export interface INewMailboxResponseData extends IAPIResponseData {
     detail: IMailbox;
 }
 
+export interface ISearchPublicUser extends IAPIResponseData {
+    detail: {
+        total: number;
+        count: number;
+        data: IUser[];
+    }
+}
+
 
 export type CheckExistenceFunc = (target: object) => Promise<IAPIResponseData>;
 export type PinCodeGenerateFunc = (email: string)  => Promise<IPinCodeGenerateResponseData>;
@@ -127,3 +137,4 @@ export type OccupationFunc = ({queryKey}: QueryFunctionContext) => Promise<IOccu
 export type GetAllMailBoxFunc = () => Promise<IAllMailboxResponseData>
 export type NewMailboxFunc = (name: string) => Promise<INewMailboxResponseData>;
 export type RemoveMailboxFunc = (id: number) => Promise<INewMailboxResponseData>
+export type SearchPublicUserFunc = (category: string, keyword: string, page: number) => Promise<ISearchPublicUser>

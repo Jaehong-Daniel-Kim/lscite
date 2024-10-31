@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Q
 from django.core.cache import cache
 import random
 
@@ -12,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from postboxes.serializers import CreatePostboxSerializer
 from .serializers import CreateOrUpdateUserSerializer, ProfileSerializer
 from occupations.serializers import OccupationSerializer, OccupationDetailSerializer
+from .pagination import SearchListSmallPagination
 from occupations.models import Company, Department, Group, Team
 from .models import User
 import time
@@ -137,20 +139,58 @@ class Me(APIView):
 
 class PublicUser(APIView):
     """
-    # api/v1/users/me
+    # api/v1/users/search
 
     API view for checking other users profile
     """
 
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, username):
-        try:
-            user = User.objects.get(username=username)
-        except User.DoesNotExist:
-            raise NotFound
-        serializer = ProfileSerializer(user)
-        return Response(serializer.data)
+    def get(self, request):
+        category = request.GET.get("category", None)
+        keyword = request.GET.get("keyword", None)
+        user = request.user
+        if category and keyword:
+            if category == "name":
+                search_keys = [{"first_name__contains": keyword}, {"last_name__contains": keyword}]
+                users_queryset = User.objects.filter(
+                    Q(**search_keys[0]) | Q(**search_keys[1])
+                ).exclude(username=user.username).exclude(username="admin")
+            elif category in ("company", "team"):
+                search_keys = [{f"occupation__{category}__name__contains": keyword}]
+                users_queryset = User.objects.filter(
+                    Q(**search_keys[0])
+                ).exclude(username=user.username).exclude(username="admin")
+            else:
+                return Response({
+                    "status": "error",
+                    "message": "Invalid category",
+                    "detail": {
+                        "category": category
+                    }
+                }, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({
+                "status": "error",
+                "message": "Unspecified category or keyword",
+                "detail": {
+                    "category": category,
+                    "keyword": keyword,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+        paginator = SearchListSmallPagination()
+        paginated_query = paginator.paginate_queryset(users_queryset, request)
+        serializer = ProfileSerializer(paginated_query, many=True)
+        data = serializer.data
+        return Response({
+            "status": "success",
+            "message": "Success",
+            "detail": {
+                "total": users_queryset.count(),
+                "count": len(data),
+                "data": data,
+            },
+        })
 
 
 class CheckExistence(APIView):
@@ -161,7 +201,7 @@ class CheckExistence(APIView):
     """
     def get(self, request):
         print("checking")
-        time.sleep(3)
+        # time.sleep(3)
         if username := request.GET.get("username"):
             if User.objects.filter(username=username).exists():
                 return Response(
@@ -214,7 +254,7 @@ class GeneratePinCode(APIView):
     PIN_CODE_KEY = "pin_code_key_{email}"
 
     def post(self, request):
-        time.sleep(5)
+        # time.sleep(5)
         if email_addr := request.data.get("email", None):
             pin_code_attempts_key = self.PIN_CODE_ATTEMPTS_KEY.format(email=email_addr)
             pin_code_attempts = cache.get_or_set(pin_code_attempts_key, 0)
@@ -268,7 +308,7 @@ class ValidatePinCode(APIView):
     PIN_CODE_KEY = "pin_code_key_{email}"
 
     def post(self, request):
-        time.sleep(5)
+        # time.sleep(5)
         email_addr = request.data.get("email", None)
         pin_code_entered = request.data.get("pin_code", None)
 

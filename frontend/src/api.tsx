@@ -4,7 +4,7 @@ import {
     CheckExistenceFunc, GetAllMailBoxFunc,
     LoginFunc, NewMailboxFunc, OccupationFunc,
     PinCodeCheckFunc,
-    PinCodeGenerateFunc, RemoveMailboxFunc, SignUpFunc,
+    PinCodeGenerateFunc, RemoveMailboxFunc, SearchPublicUserFunc, SignUpFunc,
 } from "./types";
 import {QueryFunctionContext} from "@tanstack/react-query";
 
@@ -80,8 +80,19 @@ export const newMailBox: NewMailboxFunc = (name: string) => {
             type: "custom",
         },
         {
-            headers:
-                {"X-CSRFToken": Cookie.get("csrftoken") || "",}
+            headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",}
+        })
+        .then((response) => response.data)
+        .catch((error) => {
+            return error.response.data
+        })
+}
+
+export const searchPublicUser: SearchPublicUserFunc = (category, keyword, page) => {
+    return instance.get("users/search",
+        {
+            headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",},
+            params: {category: category, keyword: keyword, page: page},
         })
         .then((response) => response.data)
         .catch((error) => {

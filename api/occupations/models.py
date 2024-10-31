@@ -75,4 +75,4 @@ class Occupation(CommonModel):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.get_full_name()}: {self.company}|{self.department}|{self.group}|{self.team}"
+        return f"{self.user.full_name()}: {self.company}|{self.department}|{self.group}|{self.team}"

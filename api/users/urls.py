@@ -10,5 +10,5 @@ urlpatterns = [
     path("me", views.Me.as_view()),   # GET | PUT
     path("pin-code-gen", views.GeneratePinCode.as_view()),   # POST
     path("pin-code-check", views.ValidatePinCode.as_view()),   # POST
-    path("<str:username>", views.PublicUser.as_view()),  # GET
+    path("search", views.PublicUser.as_view()),  # GET
 ]
