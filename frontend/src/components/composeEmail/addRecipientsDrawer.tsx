@@ -5,7 +5,7 @@ import {
     ButtonGroup,
     Card,
     CardBody, CardFooter,
-    CardHeader,
+    CardHeader, Checkbox,
     Divider,
     Drawer,
     DrawerBody,
@@ -13,14 +13,14 @@ import {
     DrawerContent,
     DrawerFooter,
     DrawerHeader,
-    DrawerOverlay,
+    DrawerOverlay, Grid,
     Heading,
     HStack, IconButton,
     Input,
     InputGroup,
     InputLeftElement,
     InputRightElement,
-    Select,
+    Select, StackDivider,
     Text, Tooltip,
     VStack
 } from "@chakra-ui/react";
@@ -30,6 +30,7 @@ import {IUser} from "../../types";
 import useDebounce from "../../lib/useDebounce";
 import {searchPublicUser} from "../../api";
 import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
+import {IoClose} from "react-icons/io5";
 
 interface IAddRecipientDrawerProps {
     isOpen: boolean;
@@ -47,10 +48,17 @@ export default function AddRecipientDrawer({isOpen, onClose}: IAddRecipientDrawe
     const [searchResult, setSearchResult] = useState<IUser[]>([]);
     const messageTitle = useRef<string> ("Type keyword to search");
 
-    const handleSelectRecipient = useCallback((e: React.MouseEvent<HTMLDivElement>, user: IUser) => {
-        // e.currentTarget.style.boxShadow =  "0 0 0 3px rgba(66, 153, 225, 0.6)"
-        setRecipients((prev) => ([...prev, user]))
+    const handleRemoveRecipient = useCallback((id: number | undefined) => {
+        setRecipients((prev) => (
+            prev.filter((recipient) => (recipient.id !== id))
+        ));
     }, [])
+
+    const handleSelectRecipient = useCallback((e: React.MouseEvent<HTMLDivElement>, user: IUser) => {
+        if (!recipients.includes(user)) {
+            setRecipients((prev) => ([...prev, user]))
+        }
+    }, [recipients])
 
     const handleSearchRecipients = useCallback(async () => {
         if (searchCategoryRef.current) {
@@ -103,7 +111,7 @@ export default function AddRecipientDrawer({isOpen, onClose}: IAddRecipientDrawe
             isOpen={isOpen}
             onClose={onClose}
             closeOnOverlayClick={false}
-            size={"md"}
+            size={"full"}
         >
             <DrawerOverlay/>
             <DrawerContent>
@@ -207,16 +215,64 @@ export default function AddRecipientDrawer({isOpen, onClose}: IAddRecipientDrawe
                                 </CardFooter>
                             </VStack>
                         </Card>
-                        <VStack w={"100%"} px={5} border={"1px solid"} borderColor={"gray.400"} borderRadius={5} minH={"10rem"}>
 
-                            {
-                                recipients.map((recipient, idx) => (
-                                    <Tooltip label={recipient.full_name}>
-                                        <Avatar size={"xs"} name-={recipient.full_name} src={recipient.avatar} />
-                                    </Tooltip>
-                                ))
-                            }
-                        </VStack>
+                        <Box
+                            w={"100%"}
+                            px={5}
+                            border={"1px solid"}
+                            borderColor={"gray.400"}
+                            borderRadius={5}
+                            minH={"10rem"}
+                            maxH={"20rem"}
+                            overflowY={"scroll"}
+                        >
+                            <VStack w={"100%"} h={"100%"} divider={<StackDivider />}>
+                                <HStack w={"100%"} columnGap={1} py={3} justifyContent={"space-between"}>
+                                    <Checkbox display={"flex"} justifyContent={"center"} flexBasis={"20px"} size={"sm"} />
+                                    {/*<Heading textAlign={"center"} flexBasis={"10%"} size={"sm"}>Avatar</Heading>*/}
+                                    <Heading textAlign={"center"} flexBasis={"25%"} size={"sm"}>Name</Heading>
+                                    <Heading textAlign={"center"} flexBasis={"40%"} size={"sm"}>Occupation</Heading>
+                                    <Heading textAlign={"center"} flexBasis={"20%"} size={"sm"}>Type</Heading>
+                                    <Box flexBasis={"20px"}></Box>
+                                </HStack>
+                                {
+                                    recipients.map((recipient, idx) => (
+                                        <HStack key={idx} w={"100%"} columnGap={1} justifyContent={"space-between"}>
+                                            <Checkbox display={"flex"} justifyContent={"center"} flexBasis={"20px"} size={"sm"} />
+                                            <HStack w={"100%"} flexBasis={"25%"} columnGap={2} justifyContent={"center"}>
+                                                <Box display={"flex"} justifyContent={"center"}><Avatar  name={recipient.full_name} src={recipient.avatar} size={"xs"} /></Box>
+                                                <Text textAlign={"center"} fontSize={"sm"}>{recipient.full_name}</Text>
+                                            </HStack>
+                                            <Text textAlign={"center"} flexBasis={"40%"} fontSize={"sm"} isTruncated>{recipient.occupation.company} / {recipient.occupation.department} / {recipient.occupation.group} / {recipient.occupation.team}</Text>
+                                            <ButtonGroup flexBasis={"20%"} display={"flex"} justifyContent={"center"}>
+                                                <Button size={"xs"}>To</Button>
+                                                <Button size={"xs"}>Cc</Button>
+                                                <Button size={"xs"}>Bcc</Button>
+                                            </ButtonGroup>
+                                            <IconButton
+                                                flexBasis={"20px"}
+                                                aria-label={"remove"}
+                                                variant={"ghost"}
+                                                size={"xs"}
+                                                icon={<IoClose />}
+                                                onClick={() => handleRemoveRecipient(recipient.id)}
+                                            />
+                                        </HStack>
+                                    ))
+                                }
+                            </VStack>
+                        </Box>
+
+                        {/*<VStack w={"100%"} px={5} border={"1px solid"} borderColor={"gray.400"} borderRadius={5} minH={"10rem"}>*/}
+
+                        {/*    {*/}
+                        {/*        recipients.map((recipient, idx) => (*/}
+                        {/*            <Tooltip label={recipient.full_name}>*/}
+                        {/*                <Avatar size={"xs"} name-={recipient.full_name} src={recipient.avatar} />*/}
+                        {/*            </Tooltip>*/}
+                        {/*        ))*/}
+                        {/*    }*/}
+                        {/*</VStack>*/}
 
                         <ButtonGroup w={"100%"} justifyContent={"end"} >
                             <Button colorScheme={"red"} onClick={onClose}>Cancel</Button>
