@@ -20,6 +20,10 @@ export interface IUser {
     }
 }
 
+interface IRecipient extends IUser {
+    type: string;
+}
+
 export interface IMailbox {
     id: number;
     name: string;

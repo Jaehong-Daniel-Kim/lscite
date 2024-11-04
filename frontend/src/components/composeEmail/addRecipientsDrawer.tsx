@@ -13,7 +13,7 @@ import {
     DrawerContent,
     DrawerFooter,
     DrawerHeader,
-    DrawerOverlay, Grid,
+    DrawerOverlay,
     Heading,
     HStack, IconButton,
     Input,
@@ -21,12 +21,12 @@ import {
     InputLeftElement,
     InputRightElement,
     Select, StackDivider,
-    Text, Tooltip,
+    Text,
     VStack
 } from "@chakra-ui/react";
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {ButtonHTMLAttributes, Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from "react";
 import {PiListMagnifyingGlass} from "react-icons/pi";
-import {IUser} from "../../types";
+import {IRecipient, IUser} from "../../types";
 import useDebounce from "../../lib/useDebounce";
 import {searchPublicUser} from "../../api";
 import {FaAngleLeft, FaAngleRight} from "react-icons/fa";
@@ -35,10 +35,13 @@ import {IoClose} from "react-icons/io5";
 interface IAddRecipientDrawerProps {
     isOpen: boolean;
     onClose: () => void;
+    updateRecipients: Dispatch<SetStateAction<IRecipient[]>>
 }
 
-export default function AddRecipientDrawer({isOpen, onClose}: IAddRecipientDrawerProps) {
-    const [recipients, setRecipients] = useState<IUser[]>([]);
+
+
+export default function AddRecipientDrawer({isOpen, onClose, updateRecipients}: IAddRecipientDrawerProps) {
+    const [recipients, setRecipients] = useState<IRecipient[]>([]);
     const searchCategoryRef = useRef<null | HTMLSelectElement>(null);
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const currentPageNumber = useRef(1);
@@ -54,11 +57,29 @@ export default function AddRecipientDrawer({isOpen, onClose}: IAddRecipientDrawe
         ));
     }, [])
 
-    const handleSelectRecipient = useCallback((e: React.MouseEvent<HTMLDivElement>, user: IUser) => {
-        if (!recipients.includes(user)) {
-            setRecipients((prev) => ([...prev, user]))
+    const handleSelectRecipient = useCallback((user: IUser) => {
+        if (!recipients.some((recipient) => (recipient.id === user.id))) {
+            const recipient: IRecipient = {...user, type: "to"}  // Recipient type is default to "to"
+            setRecipients((prev) => ([...prev, recipient]))
         }
     }, [recipients])
+
+    const handleChangeRecipientType = useCallback((e: React.MouseEvent<HTMLButtonElement>, recipient: IRecipient, idx: number) => {
+
+        const newType = e.currentTarget.value;
+        const newRecipients = [...recipients];
+        const currentType = recipient.type
+        if (newType !== currentType) {
+            recipient.type = newType;
+            newRecipients[idx] = recipient;
+        }
+        setRecipients(newRecipients);
+    }, [recipients])
+
+    const handleUpdateRecipients = useCallback(() => {
+        updateRecipients(recipients);
+        onClose();
+    }, [updateRecipients, recipients, onClose])
 
     const handleSearchRecipients = useCallback(async () => {
         if (searchCategoryRef.current) {
@@ -173,7 +194,7 @@ export default function AddRecipientDrawer({isOpen, onClose}: IAddRecipientDrawe
                                                         px={2}
                                                         py={2}
                                                         w={"100%"}
-                                                        onClick={(e) => handleSelectRecipient(e, user)}
+                                                        onClick={() => handleSelectRecipient(user)}
                                                         _hover={{shadow: "outline", backgroundColor: "gray.200"}}
                                                     >
                                                         <HStack w={"100%"} justifyContent={"start"}>
@@ -222,61 +243,77 @@ export default function AddRecipientDrawer({isOpen, onClose}: IAddRecipientDrawe
                             border={"1px solid"}
                             borderColor={"gray.400"}
                             borderRadius={5}
-                            minH={"10rem"}
-                            maxH={"20rem"}
-                            overflowY={"scroll"}
                         >
                             <VStack w={"100%"} h={"100%"} divider={<StackDivider />}>
                                 <HStack w={"100%"} columnGap={1} py={3} justifyContent={"space-between"}>
-                                    <Checkbox display={"flex"} justifyContent={"center"} flexBasis={"20px"} size={"sm"} />
-                                    {/*<Heading textAlign={"center"} flexBasis={"10%"} size={"sm"}>Avatar</Heading>*/}
+                                    <Checkbox display={"flex"} justifyContent={"center"} flexBasis={"20px"} size={"md"} />
                                     <Heading textAlign={"center"} flexBasis={"25%"} size={"sm"}>Name</Heading>
                                     <Heading textAlign={"center"} flexBasis={"40%"} size={"sm"}>Occupation</Heading>
                                     <Heading textAlign={"center"} flexBasis={"20%"} size={"sm"}>Type</Heading>
                                     <Box flexBasis={"20px"}></Box>
                                 </HStack>
-                                {
-                                    recipients.map((recipient, idx) => (
-                                        <HStack key={idx} w={"100%"} columnGap={1} justifyContent={"space-between"}>
-                                            <Checkbox display={"flex"} justifyContent={"center"} flexBasis={"20px"} size={"sm"} />
-                                            <HStack w={"100%"} flexBasis={"25%"} columnGap={2} justifyContent={"center"}>
-                                                <Box display={"flex"} justifyContent={"center"}><Avatar  name={recipient.full_name} src={recipient.avatar} size={"xs"} /></Box>
-                                                <Text textAlign={"center"} fontSize={"sm"}>{recipient.full_name}</Text>
+                                <VStack
+                                    w={"100%"}
+                                    minH={"10rem"}
+                                    maxH={"20rem"}
+                                    divider={<StackDivider />}
+                                    overflowY={"scroll"}
+                                >
+                                    {
+                                        recipients.map((recipient, idx) => (
+                                            <HStack py={2} key={idx} w={"100%"} columnGap={1} justifyContent={"space-between"}>
+                                                <Checkbox display={"flex"} justifyContent={"center"} flexBasis={"20px"} size={"md"} />
+                                                <HStack w={"100%"} flexBasis={"25%"} columnGap={2} justifyContent={"center"}>
+                                                    <Box display={"flex"} justifyContent={"center"}><Avatar  name={recipient.full_name} src={recipient.avatar} size={"xs"} /></Box>
+                                                    <Text textAlign={"center"} fontSize={"sm"}>{recipient.full_name}</Text>
+                                                </HStack>
+                                                <Text textAlign={"center"} flexBasis={"40%"} fontSize={"sm"} isTruncated>{recipient.occupation.company} / {recipient.occupation.department} / {recipient.occupation.group} / {recipient.occupation.team}</Text>
+                                                <ButtonGroup flexBasis={"20%"} display={"flex"} justifyContent={"center"}>
+                                                    <Button
+                                                        name={"to"}
+                                                        colorScheme={recipient.type === "to" ? "blue" : "gray"}
+                                                        isActive={recipient.type === "to"}
+                                                        size={"xs"}
+                                                        value={"to"}
+                                                        onClick={(e) => handleChangeRecipientType(e, recipient, idx)}
+                                                    >To
+                                                    </Button>
+                                                    <Button
+                                                        name={"cc"}
+                                                        colorScheme={recipient.type === "cc" ? "blue" : "gray"}
+                                                        isActive={recipient.type === "cc"}
+                                                        size={"xs"}
+                                                        value={"cc"}
+                                                        onClick={(e) => handleChangeRecipientType(e, recipient, idx)}
+                                                    >Cc
+                                                    </Button>
+                                                    <Button
+                                                        name={"bcc"}
+                                                        colorScheme={recipient.type === "bcc" ? "blue" : "gray"}
+                                                        isActive={recipient.type === "bcc"}
+                                                        size={"xs"}
+                                                        value={"bcc"}
+                                                        onClick={(e) => handleChangeRecipientType(e, recipient, idx)}
+                                                    >Bcc
+                                                    </Button>
+                                                </ButtonGroup>
+                                                <IconButton
+                                                    flexBasis={"20px"}
+                                                    aria-label={"remove"}
+                                                    variant={"ghost"}
+                                                    size={"xs"}
+                                                    icon={<IoClose />}
+                                                    onClick={() => handleRemoveRecipient(recipient.id)}
+                                                />
                                             </HStack>
-                                            <Text textAlign={"center"} flexBasis={"40%"} fontSize={"sm"} isTruncated>{recipient.occupation.company} / {recipient.occupation.department} / {recipient.occupation.group} / {recipient.occupation.team}</Text>
-                                            <ButtonGroup flexBasis={"20%"} display={"flex"} justifyContent={"center"}>
-                                                <Button size={"xs"}>To</Button>
-                                                <Button size={"xs"}>Cc</Button>
-                                                <Button size={"xs"}>Bcc</Button>
-                                            </ButtonGroup>
-                                            <IconButton
-                                                flexBasis={"20px"}
-                                                aria-label={"remove"}
-                                                variant={"ghost"}
-                                                size={"xs"}
-                                                icon={<IoClose />}
-                                                onClick={() => handleRemoveRecipient(recipient.id)}
-                                            />
-                                        </HStack>
-                                    ))
-                                }
+                                        ))
+                                    }
+                                </VStack>
                             </VStack>
                         </Box>
-
-                        {/*<VStack w={"100%"} px={5} border={"1px solid"} borderColor={"gray.400"} borderRadius={5} minH={"10rem"}>*/}
-
-                        {/*    {*/}
-                        {/*        recipients.map((recipient, idx) => (*/}
-                        {/*            <Tooltip label={recipient.full_name}>*/}
-                        {/*                <Avatar size={"xs"} name-={recipient.full_name} src={recipient.avatar} />*/}
-                        {/*            </Tooltip>*/}
-                        {/*        ))*/}
-                        {/*    }*/}
-                        {/*</VStack>*/}
-
                         <ButtonGroup w={"100%"} justifyContent={"end"} >
                             <Button colorScheme={"red"} onClick={onClose}>Cancel</Button>
-                            <Button colorScheme={"blue"}>Ok</Button>
+                            <Button colorScheme={"blue"} onClick={handleUpdateRecipients}>Ok</Button>
                         </ButtonGroup>
                     </VStack>
                 </DrawerBody>
