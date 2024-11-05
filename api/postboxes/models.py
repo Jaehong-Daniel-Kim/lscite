@@ -18,7 +18,7 @@ class Postbox(CommonModel):
 
     class Meta:
         db_table = "postboxes"
-        verbose_name_plural = "post boxes"
+        verbose_name_plural = "postboxes"
         constraints = [
             UniqueConstraint(fields=["name", "user"], name="unique_inbox")
         ]
@@ -40,7 +40,7 @@ class Postbox(CommonModel):
 
     def unread_mails(self) -> str:
         threshold = 100
-        rows: int = self.emails.filter(status="unread")[:threshold].count()
+        rows: int = self.emails.filter(read_status__status="unread")[:threshold].count()
         if rows >= threshold:
             return "99+"
         else:

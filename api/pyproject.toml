@@ -15,6 +15,9 @@ pymemcache = "^4.0.0"
 gunicorn = "^23.0.0"
 
 
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.29.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

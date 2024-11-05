@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Email, EmailRecipient, EmailAttachment
-from users.serializers import TinyUserSerializer
+from .models import Email, EmailRecipient, EmailAttachment, EmailReadStatus
+from users.serializers import TinyUserSerializer, ProfileSerializer
 
 
 class AttachmentNestedListSerializer(serializers.ModelSerializer):
@@ -13,14 +13,37 @@ class AttachmentNestedListSerializer(serializers.ModelSerializer):
         )
 
 
-class RecipientsListSerializer(serializers.ModelSerializer):
-    user = TinyUserSerializer(read_only=True)
+class RecipientsDetailSerializer(serializers.ModelSerializer):
+    user = ProfileSerializer(read_only=True)
 
     class Meta:
         model = EmailRecipient
         fields = (
             "user",
             "recipient_type",
+        )
+
+
+class RecipientsListSerializer(serializers.ModelSerializer):
+    # user = TinyUserSerializer(read_only=True)
+    # user = ProfileSerializer(read_only=True)
+
+    class Meta:
+        model = EmailRecipient
+        fields = (
+            "user",
+            "recipient_type",
+        )
+
+
+class ReadStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EmailReadStatus
+        fields = (
+            "email",
+            "recipient",
+            "status",
         )
 
 
@@ -52,9 +75,25 @@ class EmailListSerializer(serializers.ModelSerializer):
         return email.recipients.get(user__username=user).recipient_type
 
 
+class NewEmailSerializer(serializers.ModelSerializer):
+
+    # sender = ProfileSerializer(read_only=True)
+    # recipients = RecipientsListSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Email
+        fields = (
+            # "sender",
+            "subject",
+            # "recipients",
+            "mail_body",
+        )
+
+
+
 class EmailDetailSerializer(serializers.ModelSerializer):
 
-    sender = TinyUserSerializer(read_only=True)
+    sender = ProfileSerializer(read_only=True)
     recipients = RecipientsListSerializer(read_only=True, many=True)
     attachments = AttachmentNestedListSerializer(many=True, read_only=True)
 

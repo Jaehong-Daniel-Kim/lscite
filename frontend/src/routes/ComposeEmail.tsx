@@ -13,15 +13,16 @@ import {
 } from "@chakra-ui/react";
 import {Editor} from "@tinymce/tinymce-react";
 import {Editor as TinyMCEEditor} from "tinymce";
-import React, {useRef, useState} from "react";
+import React, {useCallback, useMemo, useRef, useState} from "react";
 import useUser from "../lib/useUser";
 import AddRecipientDrawer from "../components/composeEmail/addRecipientsDrawer";
-import {IRecipient} from "../types";
+import {IEmailForm, IRecipient} from "../types";
+import {sendEmail} from "../api";
 
 export default function ComposeEmail() {
     const editorRef = useRef<null | TinyMCEEditor>(null);
     const {isUserLoading, user} = useUser();
-    const subjectRef = useRef<null | string>(null);
+    const subjectRef = useRef<null | HTMLInputElement>(null);
     const [isRecipientDrawerOpen, setIsRecipientDrawerOpen] = useState<boolean>(false);
     const [recipients, setRecipients] = useState<IRecipient[]>([]);
 
@@ -29,8 +30,8 @@ export default function ComposeEmail() {
         return (
             <ButtonGroup>
                 <Button>Save Draft</Button>
-                <Button colorScheme={"red"}>Cancel</Button>
-                <Button colorScheme={"blue"}>Send</Button>
+                <Button colorScheme={"red"} onClick={() => window.close()}>Cancel</Button>
+                <Button colorScheme={"blue"} onClick={() => handleSendEmail()}>Send</Button>
             </ButtonGroup>
         )
     }
@@ -40,6 +41,50 @@ export default function ComposeEmail() {
             console.log(editorRef.current?.getContent());
         }
     }
+
+    const isFormCompleted = useMemo(() => {
+        if (
+            (!subjectRef.current)
+            || (!editorRef.current)
+            || (!recipients)
+            || !(user)
+        ) {
+            return false;
+        } else {
+            if (
+                (subjectRef.current.value.length <= 0)
+                || (editorRef.current.getContent().length <= 0)
+                || (recipients.length <= 0)
+            ) {
+                return false;
+            }
+        }
+        return true;
+
+    }, [subjectRef, editorRef, recipients, user])
+
+    const handleSendEmail = useCallback(async() => {
+        if (isFormCompleted) {
+            const emailForm: IEmailForm = {
+                subject: (subjectRef.current?.value as string),
+                mailBody: (editorRef.current?.getContent() as string),
+                recipients: recipients.map((recipient, idx) => (
+                    {user: (recipient.id as number), recipientType: recipient.type}
+                )),
+            }
+            const response = await sendEmail(emailForm)
+            const {status, message, detail} = response
+            if (status === "success") {
+                console.log("email successfully sent")
+                window.close()
+            } else {
+                console.log(response)
+            }
+
+        } else {
+            console.log("You have not completed the form")
+        }
+    }, [isFormCompleted])
 
     return (
         <VStack
@@ -63,12 +108,17 @@ export default function ComposeEmail() {
             </HStack>
             <HStack  px={5} w={"100%"} justifyContent={"space-between"}>
                 <Text width={"110px"}>Subject</Text>
-                <Input variant={"flushed"} isRequired={true} placeholder={"Please enter a subject"} />
+                <Input ref={subjectRef} variant={"flushed"} isRequired={true} placeholder={"Please enter a subject"} />
             </HStack>
             <VStack px={5} w={"100%"}>
                 <HStack w={"100%"} justifyContent={"space-between"}>
                     <Text width={"110px"}>Recipients</Text>
-                    <Input variant={"flushed"} placeholder={"Please enter recipients"} isReadOnly={true} onClick={() => setIsRecipientDrawerOpen(true)} />
+                    <Input
+                        variant={"flushed"}
+                        placeholder={"Please enter recipients"}
+                        isReadOnly={true}
+                        onClick={() => setIsRecipientDrawerOpen(true)}
+                    />
                 </HStack>
 
                 <HStack as={Collapse} in={recipients.length > 0} w={"100%"}>

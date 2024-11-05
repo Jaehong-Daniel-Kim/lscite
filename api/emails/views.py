@@ -4,14 +4,15 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_404_NOT_FOUND, HTTP_400_BAD_REQUEST
+from rest_framework import status
 from rest_framework.exceptions import NotFound, ParseError
 
-from .models import Email, EmailAttachment
+from .models import Email, EmailAttachment, EmailReadStatus, EmailRecipient
 from users.models import User
+from postboxes.models import Postbox
 from .serializers import (
     EmailListSerializer, EmailDetailSerializer, EmailSentSerializer,
-    AttachmentListSerializer,
+    AttachmentListSerializer, NewEmailSerializer, RecipientsListSerializer, ReadStatusSerializer
 )
 
 # Create your views here.
@@ -21,37 +22,53 @@ class Emails(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    def get_mailbox(self, user, target_mailbox: str):
+        return user.postbox.get(name=target_mailbox)
+
     def get(self, request):
         user = request.user
         email_list = Email.objects.filter(recipients__user=user)
         serializer = EmailListSerializer(email_list, many=True, context={"request": request})
         return Response(serializer.data)
 
-    def post(self, request):
-        serializer = EmailDetailSerializer(data=request.data)
-        if serializer.is_valid():
-            # user (sender)
-            user = request.user
-            # recipients
-            recipients = request.data.get("recipients")
-            if not recipients:
-                return ParseError("At least one recipient is required.")
-            try:
-                with transaction.atomic():
-                    new_email = serializer.save(user=user)
-                    for recipient_pk in recipients:
-                        recipient = User.objects.get(pk=recipient_pk)
-                        new_email.recipients.add(recipient)
-            except Exception:
-                raise ParseError("recipient not found")
-            # attachments
-            attachments = request.data.get("attachments")
-            # try:
-            #     with transaction.atomic():
-            #         for attachment_pk in attachments:
 
+    def post (self, request):
+        email_serializer = NewEmailSerializer(data=request.data)
+        if email_serializer.is_valid():
+            user = request.user
+            recipients = request.data.get("recipients")
+            recipient_serializer = RecipientsListSerializer(data=recipients, many=True)
+            if recipient_serializer.is_valid():
+                try:
+                    with transaction.atomic():
+                        new_email = email_serializer.save(sender=user)  # save email
+                        recipients = recipient_serializer.save(email=new_email)  # save recipients
+                        recipient_users: [User] = [data["user"] for data in recipient_serializer.validated_data]
+                        # save mailbox
+                        sent_box = user.postbox.get(name="sent")
+                        new_email.mail_box.add(sent_box)
+                        inboxes = Postbox.objects.filter(user__in=recipient_users, name="inbox")
+                        for inbox in inboxes:
+                            new_email.mail_box.add(inbox)
+                        # read status
+                        statuses = [
+                            EmailReadStatus(email=new_email, recipient=recipient, status="unread")
+                            for recipient in recipients
+                        ]
+                        EmailReadStatus.objects.bulk_create(statuses)
+                        return Response({
+                            "status": "success",
+                            "message": "Successfully sent",
+                            "detail": {},
+                        }, status=status.HTTP_200_OK)
+                except BaseException as e:
+                    print(e)
+                    return Response(e)
+
+            else:
+                return Response(recipient_serializer.errors)
         else:
-            Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+            return Response(email_serializer.errors)
 
 
 class EmailDetails(APIView):

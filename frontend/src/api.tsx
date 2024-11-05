@@ -4,7 +4,7 @@ import {
     CheckExistenceFunc, GetAllMailBoxFunc,
     LoginFunc, NewMailboxFunc, OccupationFunc,
     PinCodeCheckFunc,
-    PinCodeGenerateFunc, RemoveMailboxFunc, SearchPublicUserFunc, SignUpFunc,
+    PinCodeGenerateFunc, RemoveMailboxFunc, SearchPublicUserFunc, SendEmailFunc, SignUpFunc,
 } from "./types";
 import {QueryFunctionContext} from "@tanstack/react-query";
 
@@ -70,6 +70,22 @@ export const logIn: LoginFunc = (username, password) => {
 
 export const getMailboxes: GetAllMailBoxFunc = () => {
     return instance.get( "postboxes/" ).then((response) => response.data)
+}
+
+export const sendEmail: SendEmailFunc = (emailForm) => {
+    return instance.post(
+        "emails/",
+        {
+            subject: emailForm.subject,
+            mail_body: emailForm.mailBody,
+            recipients: emailForm.recipients.map((recipient, idx) => (
+                {user: recipient.user, recipient_type: recipient.recipientType}
+            ))
+        },
+        {headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",}
+        })
+        .then((response) => response.data)
+        .catch((error) => error.response.data)
 }
 
 export const newMailBox: NewMailboxFunc = (name: string) => {

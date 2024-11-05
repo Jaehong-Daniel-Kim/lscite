@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import UniqueConstraint
+
 from common.models import CommonModel
 
 # Create your models here.
@@ -59,6 +61,28 @@ class EmailAttachment(CommonModel):
         return self.file.name.split("/")[-1]
 
 
+class EmailReadStatus(CommonModel):
+
+    class Meta:
+        db_table = "read_status"
+        constraints = [
+            UniqueConstraint(fields=["email", "recipient"], name="unique_email_recipient")
+        ]
+
+    class StatusChoices(models.TextChoices):
+        READ = ("read", "Read")
+        UNREAD = ("unread", "Unread")
+
+    email = models.ForeignKey("emails.Email", on_delete=models.CASCADE, related_name="read_status")
+    recipient = models.ForeignKey("emails.EmailRecipient", on_delete=models.CASCADE, related_name="read_status")
+    status = models.CharField(choices=StatusChoices.choices,
+                              max_length=6,
+                              default="unread",)
+
+    def __str__(self):
+        return self.status
+
+
 class Email(CommonModel):
     """
     Many-to-one
@@ -74,18 +98,11 @@ class Email(CommonModel):
     class Meta:
         db_table = "emails"
 
-    class StatusChoices(models.TextChoices):
-        READ = ("read", "Read")
-        UNREAD = ("unread", "Unread")
-
     sender = models.ForeignKey("users.User",
                                on_delete=models.CASCADE,
                                related_name="mail_sent")
     subject = models.CharField(max_length=150)
     mail_body = models.TextField()
-    status = models.CharField(choices=StatusChoices.choices,
-                              max_length=6,
-                              default="unread",)
     mail_box = models.ManyToManyField("postboxes.Postbox",
                                       related_name="emails")
 
