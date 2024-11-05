@@ -45,7 +45,11 @@ export default function DefaultMailbox({mailbox, isMenuCollapsed}: IDefaultMailb
                                     {mailbox.name[0].toUpperCase() + mailbox.name.slice(1)}
                                 </Text>
                                 <Text fontSize={"sm"} color={"gray.500"}>
-                                    {parseInt(mailbox.unreadMails) > 0 ? mailbox.unreadMails : ""}
+                                    {
+                                        (parseInt(mailbox.unreadMails) > 0 && mailbox.name !== "sent")
+                                            ? mailbox.unreadMails
+                                            : ""
+                                    }
                                 </Text>
                             </>
                     }
