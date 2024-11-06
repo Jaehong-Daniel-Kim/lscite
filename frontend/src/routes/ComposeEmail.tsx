@@ -6,7 +6,7 @@ import {
     Divider,
     Heading,
     HStack,
-    Input,
+    Input, InputGroup, InputRightElement,
     SkeletonText, StackDivider,
     Text,
     VStack
@@ -84,7 +84,16 @@ export default function ComposeEmail() {
         } else {
             console.log("You have not completed the form")
         }
-    }, [isFormCompleted])
+    }, [isFormCompleted, recipients])
+
+    const handleAddMe = useCallback(() => {
+        if (user) {
+            if (!recipients.some((recipient) => (recipient.id === user.id))) {
+                const me: IRecipient = {...user, type: "to"}
+                setRecipients((prev) => ([...prev, me]))
+            }
+        }
+    }, [user, recipients])
 
     return (
         <VStack
@@ -113,12 +122,18 @@ export default function ComposeEmail() {
             <VStack px={5} w={"100%"}>
                 <HStack w={"100%"} justifyContent={"space-between"}>
                     <Text width={"110px"}>Recipients</Text>
-                    <Input
-                        variant={"flushed"}
-                        placeholder={"Please enter recipients"}
-                        isReadOnly={true}
-                        onClick={() => setIsRecipientDrawerOpen(true)}
-                    />
+                    <InputGroup>
+                        <Input
+                            variant={"flushed"}
+                            placeholder={"Please enter recipients"}
+                            isReadOnly={true}
+                            onClick={() => setIsRecipientDrawerOpen(true)}
+                        />
+                        <InputRightElement w={"60px"}>
+                            <Button colorScheme={"black"} variant={"outline"} size={"sm"} onClick={handleAddMe}>To me</Button>
+                        </InputRightElement>
+                    </InputGroup>
+
                 </HStack>
 
                 <HStack as={Collapse} in={recipients.length > 0} w={"100%"}>
@@ -172,6 +187,7 @@ export default function ComposeEmail() {
             <AddRecipientDrawer
                 isOpen={isRecipientDrawerOpen}
                 onClose={() => setIsRecipientDrawerOpen(false)}
+                recipients={recipients}
                 updateRecipients={setRecipients}
             />
 

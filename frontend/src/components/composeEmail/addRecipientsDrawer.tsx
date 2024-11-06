@@ -35,13 +35,14 @@ import {IoClose} from "react-icons/io5";
 interface IAddRecipientDrawerProps {
     isOpen: boolean;
     onClose: () => void;
+    recipients: IRecipient[]
     updateRecipients: Dispatch<SetStateAction<IRecipient[]>>
 }
 
 
 
-export default function AddRecipientDrawer({isOpen, onClose, updateRecipients}: IAddRecipientDrawerProps) {
-    const [recipients, setRecipients] = useState<IRecipient[]>([]);
+export default function AddRecipientDrawer({isOpen, onClose, recipients ,updateRecipients}: IAddRecipientDrawerProps) {
+    // const [recipients, setRecipients] = useState<IRecipient[]>([]);
     const searchCategoryRef = useRef<null | HTMLSelectElement>(null);
     const [searchKeyword, setSearchKeyword] = useState<string>("");
     const currentPageNumber = useRef(1);
@@ -52,17 +53,17 @@ export default function AddRecipientDrawer({isOpen, onClose, updateRecipients}: 
     const messageTitle = useRef<string> ("Type keyword to search");
 
     const handleRemoveRecipient = useCallback((id: number | undefined) => {
-        setRecipients((prev) => (
+        updateRecipients((prev) => (
             prev.filter((recipient) => (recipient.id !== id))
         ));
-    }, [])
+    }, [updateRecipients])
 
     const handleSelectRecipient = useCallback((user: IUser) => {
         if (!recipients.some((recipient) => (recipient.id === user.id))) {
             const recipient: IRecipient = {...user, type: "to"}  // Recipient type is default to "to"
-            setRecipients((prev) => ([...prev, recipient]))
+            updateRecipients((prev) => ([...prev, recipient]))
         }
-    }, [recipients])
+    }, [recipients, updateRecipients])
 
     const handleChangeRecipientType = useCallback((e: React.MouseEvent<HTMLButtonElement>, recipient: IRecipient, idx: number) => {
 
@@ -73,13 +74,13 @@ export default function AddRecipientDrawer({isOpen, onClose, updateRecipients}: 
             recipient.type = newType;
             newRecipients[idx] = recipient;
         }
-        setRecipients(newRecipients);
-    }, [recipients])
+        updateRecipients(newRecipients);
+    }, [recipients, updateRecipients])
 
     const handleUpdateRecipients = useCallback(() => {
-        updateRecipients(recipients);
+        // updateRecipients(recipients);
         onClose();
-    }, [updateRecipients, recipients, onClose])
+    }, [onClose])
 
     const handleSearchRecipients = useCallback(async () => {
         if (searchCategoryRef.current) {
