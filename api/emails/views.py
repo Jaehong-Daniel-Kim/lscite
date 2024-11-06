@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import NotFound, ParseError
 
+from users.pagination import EmailSearchLargePagination
 from .models import Email, EmailAttachment, EmailReadStatus, EmailRecipient
 from users.models import User
 from postboxes.models import Postbox
@@ -25,11 +26,11 @@ class Emails(APIView):
     def get_mailbox(self, user, target_mailbox: str):
         return user.postbox.get(name=target_mailbox)
 
-    def get(self, request):
-        user = request.user
-        email_list = Email.objects.filter(recipients__user=user)
-        serializer = EmailListSerializer(email_list, many=True, context={"request": request})
-        return Response(serializer.data)
+    # def get(self, request):
+    #     user = request.user
+    #     email_list = Email.objects.filter(recipients__user=user)
+    #     serializer = EmailListSerializer(email_list, many=True, context={"request": request})
+    #     return Response(serializer.data)
 
 
     def post (self, request):
@@ -69,6 +70,29 @@ class Emails(APIView):
                 return Response(recipient_serializer.errors)
         else:
             return Response(email_serializer.errors)
+
+
+class EmailListByMailbox(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, mailbox_pk):
+        user = request.user
+        if Postbox.objects.get(pk=mailbox_pk).user == user:
+            emails = Email.objects.filter(mail_box=mailbox_pk).order_by("-created_at")
+            paginator = EmailSearchLargePagination()
+            paginated_query = paginator.paginate_queryset(emails, request)  # request should have "page" param
+            serializer = EmailListSerializer(paginated_query, many=True, context={"request": request, "mailbox_pk": mailbox_pk})
+            return Response({
+                "status": "success",
+                "message": "successfully retrieved emails",
+                "detail": serializer.data
+            }, status=status.HTTP_200_OK)
+        return Response({
+            "status": "error",
+            "message": "error authenticating",
+            "detail": {},
+        })
 
 
 class EmailDetails(APIView):

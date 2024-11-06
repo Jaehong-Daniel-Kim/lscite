@@ -16,7 +16,7 @@ import {Editor as TinyMCEEditor} from "tinymce";
 import React, {useCallback, useMemo, useRef, useState} from "react";
 import useUser from "../lib/useUser";
 import AddRecipientDrawer from "../components/composeEmail/addRecipientsDrawer";
-import {IEmailForm, IRecipient} from "../types";
+import {IMailForm, IRecipient} from "../types";
 import {sendEmail} from "../api";
 
 export default function ComposeEmail() {
@@ -65,7 +65,7 @@ export default function ComposeEmail() {
 
     const handleSendEmail = useCallback(async() => {
         if (isFormCompleted) {
-            const emailForm: IEmailForm = {
+            const emailForm: IMailForm = {
                 subject: (subjectRef.current?.value as string),
                 mailBody: (editorRef.current?.getContent() as string),
                 recipients: recipients.map((recipient, idx) => (
@@ -177,7 +177,6 @@ export default function ComposeEmail() {
                                         </HStack>
                                     ))
                                 }
-
                             </VStack>
                         </VStack>
                     </HStack>

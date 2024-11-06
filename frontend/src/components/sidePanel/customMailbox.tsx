@@ -1,5 +1,4 @@
 import {
-    Button,
     MenuButton,
     Circle,
     HStack,
@@ -8,11 +7,10 @@ import {
     Menu,
     Text,
     Tooltip,
-    Collapse,
     Box, MenuList, MenuItem, Portal, useDisclosure
 } from "@chakra-ui/react";
 import {BsDot, BsThreeDots} from "react-icons/bs";
-import {Dispatch, SetStateAction, useCallback, useRef, useState} from "react";
+import {Dispatch, SetStateAction, useState} from "react";
 import {IMailbox} from "../../types";
 
 interface ICustomMailboxProps {
@@ -20,9 +18,17 @@ interface ICustomMailboxProps {
 
     isMenuCollapsed: boolean;
     setMailboxToRemove: Dispatch<SetStateAction<number>>
+    onClick: Dispatch<SetStateAction<IMailbox | undefined>>
+    isActive: boolean
 }
-export default function CustomMailbox({mailbox, isMenuCollapsed, setMailboxToRemove}: ICustomMailboxProps) {
-
+export default function CustomMailbox({
+                                          mailbox,
+                                          isMenuCollapsed,
+                                          setMailboxToRemove,
+                                          onClick,
+                                          isActive,
+                                      }: ICustomMailboxProps)
+{
     const {isOpen, onClose, onOpen} = useDisclosure();
     const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
 
@@ -36,6 +42,8 @@ export default function CustomMailbox({mailbox, isMenuCollapsed, setMailboxToRem
             columnGap={2}
             w={"85%"}
             _hover={{cursor: "pointer", backgroundColor: "gray.200"}}
+            onClick={() => onClick(mailbox)}
+            backgroundColor={isActive ? "gray.200" : ""}
         >
             {
                 isMenuCollapsed ?
@@ -54,7 +62,7 @@ export default function CustomMailbox({mailbox, isMenuCollapsed, setMailboxToRem
                     >
                         <Icon as={BsDot} boxSize={3.5} />
                         <Text w={"100%"} fontWeight={"600"} textAlign={"left"} fontSize={"sm"} isTruncated>{mailbox.name}</Text>
-                        <Text fontSize={"sm"} fontWeight={"600"} color={"gray.500"} >{parseInt(mailbox.unreadMails) > 0 ? mailbox.unreadMails : "0"}</Text>
+                        <Text fontSize={"sm"} fontWeight={"600"} color={"gray.500"} >{parseInt(mailbox.unreadMails) > 0 ? mailbox.unreadMails : ""}</Text>
                     </HStack>
                     <Box
                         w={isMenuVisible || isOpen ? "fit-content" : "0"}

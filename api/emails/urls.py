@@ -1,11 +1,12 @@
 from django.urls import include, path
-from .views import Emails, EmailDetails, SentMails, Attachment
+from . import views
 
 
 urlpatterns = [
-    path("", Emails.as_view()),  # GET | POST
-    path("<int:pk>", EmailDetails.as_view()),  # GET
-    path("outmail", SentMails.as_view()),  # GET
-    path("attachment", Attachment.as_view()),  # GET | POST
+    path("", views.Emails.as_view()),  # POST
+    path("<int:mailbox_pk>", views.EmailListByMailbox.as_view()),  # GET
+    path("<int:pk>", views.EmailDetails.as_view()),  # GET
+    path("outmail", views.SentMails.as_view()),  # GET
+    path("attachment", views.Attachment.as_view()),  # GET | POST
 ]
 

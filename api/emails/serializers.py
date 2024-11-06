@@ -1,6 +1,9 @@
 from rest_framework import serializers
+from postboxes.models import Postbox
 from .models import Email, EmailRecipient, EmailAttachment, EmailReadStatus
 from users.serializers import TinyUserSerializer, ProfileSerializer
+from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime
 
 
 class AttachmentNestedListSerializer(serializers.ModelSerializer):
@@ -59,6 +62,7 @@ class EmailListSerializer(serializers.ModelSerializer):
 
     recipient_type = serializers.SerializerMethodField(read_only=True)
     sender = TinyUserSerializer(read_only=True)
+    created_datetime = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Email
@@ -67,12 +71,34 @@ class EmailListSerializer(serializers.ModelSerializer):
             "subject",
             "sender",
             "recipient_type",
-            "created_at"
+            "created_datetime"
         )
 
-    def get_recipient_type(self, email):
-        user = self.context.get("request").user
-        return email.recipients.get(user__username=user).recipient_type
+    def get_created_datetime(self, instance):
+        created_at = instance.created_at
+        today = datetime.today()
+        if today.year == created_at.year:
+            # This year
+            if (today.month == created_at.month and
+                    today.day == created_at.day):
+                return created_at.strftime("%H:%M")
+            else:
+                return created_at.strftime("%m-%d %H:%M")
+        else:
+            # Not this year
+            return created_at.strftime("%y-%m-%d %H:%M")
+
+    def get_recipient_type(self, instance):
+        try:
+            user = self.context.get("request").user
+            return instance.recipients.get(user__username=user).recipient_type
+        except ObjectDoesNotExist:
+            mailbox_pk = self.context.get("mailbox_pk")
+            mailbox = Postbox.objects.get(id=mailbox_pk).name
+            if mailbox == "sent":
+                return None
+            else:
+                print(mailbox)
 
 
 class NewEmailSerializer(serializers.ModelSerializer):

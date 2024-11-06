@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from postboxes.serializers import CreatePostboxSerializer
 from .serializers import CreateOrUpdateUserSerializer, ProfileSerializer
 from occupations.serializers import OccupationSerializer, OccupationDetailSerializer
-from .pagination import SearchListSmallPagination
+from .pagination import UserSearchListSmallPagination
 from occupations.models import Company, Department, Group, Team
 from .models import User
 import time
@@ -178,8 +178,8 @@ class PublicUser(APIView):
                     "keyword": keyword,
                 }
             }, status=status.HTTP_400_BAD_REQUEST)
-        paginator = SearchListSmallPagination()
-        paginated_query = paginator.paginate_queryset(users_queryset, request)
+        paginator = UserSearchListSmallPagination()
+        paginated_query = paginator.paginate_queryset(users_queryset, request)  # request should have "page" param
         serializer = ProfileSerializer(paginated_query, many=True)
         data = serializer.data
         return Response({

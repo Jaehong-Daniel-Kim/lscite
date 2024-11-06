@@ -16,9 +16,9 @@ import {
     Portal,
     PopoverContent,
     PopoverArrow,
-    PopoverBody, Input, Skeleton, useDisclosure, SkeletonText, useSteps
+    PopoverBody, Input, Skeleton, useDisclosure, SkeletonText
 } from "@chakra-ui/react";
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from "react";
 import {TbLayoutSidebarLeftCollapse, TbLayoutSidebarRightCollapse} from "react-icons/tb";
 import NewMailSm from "./NewMailSm";
 import NewMailLg from "./NewMailLg";
@@ -30,13 +30,26 @@ import {getMailboxes, newMailBox, removeMailbox} from "../../api";
 import {useQuery, useQueryClient} from "@tanstack/react-query"
 import WarningAlert from "../alertModal/warningAlert";
 import ConfirmationAlert from "../alertModal/confirmationAlert";
+import {IMailbox} from "../../types";
+
+interface ISidePanelProps {
+    defaultMailboxes: IMailbox[] | undefined;
+    customMailboxes: IMailbox[] | undefined;
+    currentMailbox: IMailbox | undefined;
+    setCurrentMailbox: Dispatch<SetStateAction<IMailbox | undefined>>
+}
 
 
-export default function SidePanelV2() {
+export default function SidePanelV2({
+                                        defaultMailboxes,
+                                        customMailboxes,
+                                        currentMailbox,
+                                        setCurrentMailbox,
+                                    } : ISidePanelProps) {
     const queryClient = useQueryClient();
-    const {isLoading: isMailboxLoading, data: mailboxes} = useQuery({
-        queryKey: ["mailboxes"], queryFn: getMailboxes, retry: 3,
-    });
+    // const {isLoading: isMailboxLoading, data: mailboxes} = useQuery({
+    //     queryKey: ["mailboxes"], queryFn: getMailboxes, retry: 3,
+    // });
     const newMailboxRef = useRef<null | HTMLInputElement>(null);
     const [mailboxToRemove, setMailboxToRemove] = useState<number>(0);
     const [isRemoveConfirmationAlertOpen, setIsRemoveConfirmationAlertOpen] = useState(false);
@@ -57,7 +70,7 @@ export default function SidePanelV2() {
             const response = await newMailBox(postboxName);
             const {status, message, detail } = response;
             if (status === "success") {
-                mailboxes?.detail.custom.push(detail)
+                customMailboxes?.push(detail)
                 setIsNewMailboxPopoverOpen(false)
                 newMailboxRef.current.value = "";
             } else {
@@ -69,7 +82,7 @@ export default function SidePanelV2() {
             onNewMailboxWarningOpen();
             warningMessage.current = "Name of a mailbox cannot be empty."
         }
-    }, [mailboxes, onNewMailboxWarningOpen])
+    }, [customMailboxes, onNewMailboxWarningOpen])
 
     const handleRemoveMailbox = useCallback(async() => {
         if (mailboxToRemove) {
@@ -172,6 +185,7 @@ export default function SidePanelV2() {
                 >
                     {/*Default mailboxes*/}
                     {/* Skeleton Placeholders */}
+                    { /*
                     {isMailboxLoading ? (
                         Array(3).fill("").map((_, idx) => (
                             <HStack
@@ -193,8 +207,18 @@ export default function SidePanelV2() {
 
                         )
                     }
-
-
+                    */ }
+                    {
+                        defaultMailboxes?.map((mailbox, idx) => (
+                            <DefaultMailbox
+                                key={idx}
+                                mailbox={mailbox}
+                                isMenuCollapsed={isMenuCollapsed}
+                                onClick={setCurrentMailbox}
+                                isActive={currentMailbox?.id === mailbox.id}
+                            />
+                        ))
+                    }
                     {/*Divider*/}
                     <Divider py={"2"} borderColor={"black"}  w={"85%"} orientation={"horizontal"} />
 
@@ -227,8 +251,15 @@ export default function SidePanelV2() {
                     <Box w={"100%"} as={Collapse} in={isCustomMailboxOpen} style={{overflow: ""}}>
                         <VStack w={"100%"}>
                             {
-                                mailboxes?.detail.custom.map((mailbox, idx) => (
-                                    <CustomMailbox key={idx} mailbox={mailbox} isMenuCollapsed={isMenuCollapsed} setMailboxToRemove={setMailboxToRemove} />
+                                customMailboxes?.map((mailbox, idx) => (
+                                    <CustomMailbox
+                                        key={idx}
+                                        mailbox={mailbox}
+                                        isMenuCollapsed={isMenuCollapsed}
+                                        setMailboxToRemove={setMailboxToRemove}
+                                        onClick={setCurrentMailbox}
+                                        isActive={currentMailbox?.id === mailbox.id}
+                                    />
                                 ))
                             }
                         </VStack>

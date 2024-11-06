@@ -24,7 +24,7 @@ interface IRecipient extends IUser {
     type: string;
 }
 
-interface IEmailForm {
+interface IMailForm {
     subject: string;
     mailBody: string;
     recipients: {
@@ -140,6 +140,23 @@ export interface ISearchPublicUser extends IAPIResponseData {
     }
 }
 
+export interface IMailList {
+    pk: number;
+    subject: string;
+    sender: {
+        avatar: string;
+        first_name: string;
+        last_name: string;
+        username: string;
+    },
+    recipient_type: string;
+    created_datetime: string;
+}
+
+export interface IMailListResponseData extends IAPIResponseData {
+    detail: IMailList[];
+}
+
 
 export type CheckExistenceFunc = (target: object) => Promise<IAPIResponseData>;
 export type PinCodeGenerateFunc = (email: string)  => Promise<IPinCodeGenerateResponseData>;
@@ -151,4 +168,5 @@ export type GetAllMailBoxFunc = () => Promise<IAllMailboxResponseData>;
 export type NewMailboxFunc = (name: string) => Promise<INewMailboxResponseData>;
 export type RemoveMailboxFunc = (id: number) => Promise<INewMailboxResponseData>;
 export type SearchPublicUserFunc = (category: string, keyword: string, page: number) => Promise<ISearchPublicUser>;
-export type SendEmailFunc = (emailForm: IEmailForm) => Promise<IAPIResponseData>;
+export type SendEmailFunc = (emailForm: IMailForm) => Promise<IAPIResponseData>;
+export type GetEmailListFunc = ({queryKey}: QueryFunctionContext) => Promise<IMailListResponseData>;

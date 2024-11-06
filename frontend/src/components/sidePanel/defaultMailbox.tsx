@@ -3,16 +3,18 @@ import {useQuery} from "@tanstack/react-query"
 import {IMailbox} from "../../types";
 import {getMailboxes} from "../../api";
 import {BsEnvelopeArrowDown, BsEnvelopeArrowUp} from "react-icons/bs";
-import {useMemo} from "react";
+import {Dispatch, SetStateAction, useMemo} from "react";
 import {CiFileOn} from "react-icons/ci";
 
 
 interface IDefaultMailboxesProps {
     mailbox: IMailbox;
     isMenuCollapsed: boolean;
+    onClick: Dispatch<SetStateAction<IMailbox | undefined>>;
+    isActive: boolean;
 }
 
-export default function DefaultMailbox({mailbox, isMenuCollapsed}: IDefaultMailboxesProps) {
+export default function DefaultMailbox({mailbox, isMenuCollapsed, onClick, isActive}: IDefaultMailboxesProps) {
 
     const mailboxIcons = useMemo<Record<string, any>>(() => {
         return {
@@ -34,7 +36,8 @@ export default function DefaultMailbox({mailbox, isMenuCollapsed}: IDefaultMailb
                     w={"90%"}
                     justifyContent={"center"}
                     mx={6}
-                    onClick={() => console.log("clicked")}
+                    onClick={() => onClick(mailbox)}
+                    backgroundColor={isActive ? "gray.300" : ""}
                 >
                     {
                         isMenuCollapsed
