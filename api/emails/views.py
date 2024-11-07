@@ -1,6 +1,5 @@
 from django.db.models import Q
 from django.db import transaction
-from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -12,8 +11,8 @@ from .models import Email, EmailAttachment, EmailReadStatus, EmailRecipient
 from users.models import User
 from postboxes.models import Postbox
 from .serializers import (
-    EmailListSerializer, EmailDetailSerializer, EmailSentSerializer,
-    AttachmentListSerializer, NewEmailSerializer, RecipientsListSerializer, ReadStatusSerializer
+    EmailListSerializer, NewEmailSerializer, RecipientsListSerializer,
+    SentEmailListSerializer
 )
 
 # Create your views here.
@@ -25,13 +24,6 @@ class Emails(APIView):
 
     def get_mailbox(self, user, target_mailbox: str):
         return user.postbox.get(name=target_mailbox)
-
-    # def get(self, request):
-    #     user = request.user
-    #     email_list = Email.objects.filter(recipients__user=user)
-    #     serializer = EmailListSerializer(email_list, many=True, context={"request": request})
-    #     return Response(serializer.data)
-
 
     def post (self, request):
         email_serializer = NewEmailSerializer(data=request.data)
@@ -78,11 +70,15 @@ class EmailListByMailbox(APIView):
 
     def get(self, request, mailbox_pk):
         user = request.user
-        if Postbox.objects.get(pk=mailbox_pk).user == user:
+        postbox = Postbox.objects.get(pk=mailbox_pk)
+        if postbox.user == user:
             emails = Email.objects.filter(mail_box=mailbox_pk).order_by("-created_at")
             paginator = EmailSearchLargePagination()
             paginated_query = paginator.paginate_queryset(emails, request)  # request should have "page" param
-            serializer = EmailListSerializer(paginated_query, many=True, context={"request": request, "mailbox_pk": mailbox_pk})
+            if postbox.name == "sent":
+                serializer = SentEmailListSerializer(paginated_query, many=True, context={"request": request})
+            else:
+                serializer = EmailListSerializer(paginated_query, many=True, context={"request": request})
             return Response({
                 "status": "success",
                 "message": "successfully retrieved emails",
@@ -95,37 +91,37 @@ class EmailListByMailbox(APIView):
         })
 
 
-class EmailDetails(APIView):
-
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, pk):
-        user = request.user
-        email = Email.objects.get(pk=pk)
-        if email.recipients.filter(user__username=user):
-            serializer = EmailDetailSerializer(email)
-            return Response(serializer.data)
-        else:
-            raise NotFound
-
-
-class SentMails(APIView):
-
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        email_list = Email.objects.filter(sender__username=user)
-        serializer = EmailSentSerializer(email_list, many=True)
-        return Response(serializer.data)
+# class EmailDetails(APIView):
+#
+#     permission_classes = [IsAuthenticated]
+#
+#     def get(self, request, pk):
+#         user = request.user
+#         email = Email.objects.get(pk=pk)
+#         if email.recipients.filter(user__username=user):
+#             serializer = EmailDetailSerializer(email)
+#             return Response(serializer.data)
+#         else:
+#             raise NotFound
 
 
-class Attachment(APIView):
+# class SentMails(APIView):
+#
+#     permission_classes = [IsAuthenticated]
+#
+#     def get(self, request):
+#         user = request.user
+#         email_list = Email.objects.filter(sender__username=user)
+#         serializer = EmailSentSerializer(email_list, many=True)
+#         return Response(serializer.data)
 
-    permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        user = request.user
-        attachments = EmailAttachment.objects.filter(email__recipients__user=user)
-        serializer = AttachmentListSerializer(attachments, many=True)
-        return Response(serializer.data)
+# class Attachment(APIView):
+#
+#     permission_classes = [IsAuthenticated]
+#
+#     def get(self, request):
+#         user = request.user
+#         attachments = EmailAttachment.objects.filter(email__recipients__user=user)
+#         serializer = AttachmentListSerializer(attachments, many=True)
+#         return Response(serializer.data)

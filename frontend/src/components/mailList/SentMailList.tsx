@@ -55,8 +55,7 @@ export default function SentMailList({title, mailList}: IMailListProps) {
                     <HStack w={"100%"} columnGap={1} py={1} justifyContent={"space-between"}>
                         <Checkbox display={"flex"} justifyContent={"center"} flexBasis={"20px"} size={"md"} />
                         <Text as={"b"} textAlign={"start"} flexBasis={"30%"} fontSize={"xs"}>Subject</Text>
-                        <Text as={"b"} textAlign={"start"} flexBasis={"20%"} fontSize={"xs"}>From</Text>
-                        <Text as={"b"} textAlign={"start"} flexBasis={"10%"} fontSize={"xs"}>recipients</Text>
+                        <Text as={"b"} textAlign={"start"} flexBasis={"40%"} fontSize={"xs"}>to</Text>
                         <Text as={"b"} textAlign={"start"} flexBasis={"10%"} fontSize={"xs"}>Date</Text>
                     </HStack>
                     <VStack
@@ -69,9 +68,7 @@ export default function SentMailList({title, mailList}: IMailListProps) {
                         <VStack
                             w={"100%"}
                             h={"100%"}
-                            // position={"relative"}
                             divider={<StackDivider />}
-                            // overflowY={"scroll"}
                         >
                             {
                                 mailList?.map((email, idx) => (
@@ -83,11 +80,12 @@ export default function SentMailList({title, mailList}: IMailListProps) {
                                     >
                                         <Checkbox display={"flex"} justifyContent={"center"} flexBasis={"20px"} size={"md"} />
                                         <Text textAlign={"start"} flexBasis={"30%"} fontSize={"sm"} isTruncated={true}>{email.subject}</Text>
-                                        <Text textAlign={"start"} flexBasis={"20%"} fontSize={"sm"} isTruncated={true}>
-                                            {email.sender.first_name} {email.sender.last_name}
-                                        </Text>
-                                        <Button textAlign={"start"} variant={"unstyled"} flexBasis={"10%"} size={"xs"}>View</Button>
-                                        {/*<Text textAlign={"start"} flexBasis={"10%"} fontSize={"sm"} isTruncated={true}> {email.recipient_type} </Text>*/}
+                                        <Button textAlign={"start"} variant={"unstyled"} flexBasis={"40%"} size={"xs"}>
+                                            {email.recipients?.at(0)?.user.full_name}
+                                            {(email.recipients?.length as number) - 1 > 0
+                                                ? ` with ${(email.recipients?.length as number) - 1}`
+                                                : ""}
+                                        </Button>
                                         <Text textAlign={"start"} flexBasis={"10%"} fontSize={"sm"} isTruncated={true}> {email.created_datetime} </Text>
                                     </HStack>
                                 ))

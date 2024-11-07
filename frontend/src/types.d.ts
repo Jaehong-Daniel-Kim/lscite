@@ -24,6 +24,11 @@ interface IRecipient extends IUser {
     type: string;
 }
 
+interface IRecipientDetail {
+    user: IUser;
+    recipientType: string;
+}
+
 interface IMailForm {
     subject: string;
     mailBody: string;
@@ -143,13 +148,9 @@ export interface ISearchPublicUser extends IAPIResponseData {
 export interface IMailList {
     pk: number;
     subject: string;
-    sender: {
-        avatar: string;
-        first_name: string;
-        last_name: string;
-        username: string;
-    },
-    recipient_type: string;
+    sender: IUser;
+    recipient_type?: string;
+    recipients?: IRecipientDetail[];
     created_datetime: string;
 }
 
