@@ -1,0 +1,72 @@
+[
+{
+  "model": "occupations.team",
+  "pk": 1,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Team A",
+    "group": 1
+  }
+},
+{
+  "model": "occupations.team",
+  "pk": 2,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Team A",
+    "group": 2
+  }
+},
+{
+  "model": "occupations.team",
+  "pk": 3,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Team B",
+    "group": 2
+  }
+},
+{
+  "model": "occupations.team",
+  "pk": 4,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Team C",
+    "group": 3
+  }
+},
+{
+  "model": "occupations.team",
+  "pk": 5,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Team D",
+    "group": 4
+  }
+},
+{
+  "model": "occupations.team",
+  "pk": 6,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Team E",
+    "group": 5
+  }
+},
+{
+  "model": "occupations.team",
+  "pk": 7,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Team G",
+    "group": 8
+  }
+}
+]

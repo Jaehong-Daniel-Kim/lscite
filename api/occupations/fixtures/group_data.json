@@ -1,0 +1,92 @@
+[
+{
+  "model": "occupations.group",
+  "pk": 1,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Group A",
+    "department": 1
+  }
+},
+{
+  "model": "occupations.group",
+  "pk": 2,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Group B",
+    "department": 1
+  }
+},
+{
+  "model": "occupations.group",
+  "pk": 3,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Group C",
+    "department": 2
+  }
+},
+{
+  "model": "occupations.group",
+  "pk": 4,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Group A",
+    "department": 2
+  }
+},
+{
+  "model": "occupations.group",
+  "pk": 5,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Group D",
+    "department": 3
+  }
+},
+{
+  "model": "occupations.group",
+  "pk": 6,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Group F",
+    "department": 4
+  }
+},
+{
+  "model": "occupations.group",
+  "pk": 7,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Group C",
+    "department": 3
+  }
+},
+{
+  "model": "occupations.group",
+  "pk": 8,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Group D",
+    "department": 7
+  }
+},
+{
+  "model": "occupations.group",
+  "pk": 9,
+  "fields": {
+    "created_at": null,
+    "updated_at": null,
+    "name": "Group F",
+    "department": 8
+  }
+}
+]
