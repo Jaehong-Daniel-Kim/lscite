@@ -1,4 +1,4 @@
-import {IMailList} from "../../types";
+import {ISimpleMailObject} from "../../types";
 import {
     Checkbox,
     Divider,
@@ -11,14 +11,15 @@ import {
     VStack,
     Button
 } from "@chakra-ui/react";
-import React from "react";
+import React, {Dispatch, SetStateAction} from "react";
 
 interface IMailListProps {
     title: string | undefined;
-    mailList: IMailList[]| undefined;
+    mailList: ISimpleMailObject[]| undefined;
+    onClickItem: Dispatch<SetStateAction<number>>;
 
 }
-export default function SentMailList({title, mailList}: IMailListProps) {
+export default function SentMailList({title, mailList, onClickItem}: IMailListProps) {
     return (
         <VStack w={"100%"} h={"100%"} >
             <HStack

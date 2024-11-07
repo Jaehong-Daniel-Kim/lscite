@@ -2,7 +2,6 @@ import {
     HStack, useDisclosure, VStack, Spinner
 } from "@chakra-ui/react";
 import Header from "../components/header/Header";
-import useUser from "../lib/useUser";
 import SidePanelV2 from "../components/sidePanel/SidePanelv2";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import {getEmailList, getMailboxes} from "../api";
@@ -10,9 +9,11 @@ import {useEffect, useRef, useState} from "react";
 import ReceivedMailList from "../components/mailList/ReceivedMailList";
 import {IMailbox} from "../types";
 import SentMailList from "../components/mailList/SentMailList";
+import EmailDetail from "../components/emailDetail/EmailDetail";
 
 
 export default function Home() {
+    const [selectedEmail, setSelectedEmail] = useState<number>(0);
     const queryClient = useQueryClient();
     const {isLoading: isMailboxLoading, data: mailboxes} = useQuery({
         queryKey: ["mailboxes"], queryFn: getMailboxes, retry: 3,
@@ -66,11 +67,27 @@ export default function Home() {
                                 customMailboxes={mailboxes?.detail.custom}
                                 currentMailbox={currentMailbox}
                                 setCurrentMailbox={setCurrentMailbox}
+                                resetSelected={() => setSelectedEmail(0)}
                             />
                             {
-                                currentMailbox?.name === "sent"
-                                    ? <SentMailList title={currentMailbox?.name} mailList={mailList?.detail} />
-                                    : <ReceivedMailList title={currentMailbox?.name} mailList={mailList?.detail}/>
+                                selectedEmail ?
+                                    <EmailDetail
+                                        title={currentMailbox?.name}
+                                        emailId={selectedEmail}
+                                    />
+                                    : currentMailbox?.name === "sent"
+                                        ?
+                                            <SentMailList
+                                                title={currentMailbox?.name}
+                                                mailList={mailList?.detail}
+                                                onClickItem={setSelectedEmail}
+                                            />
+                                        :
+                                            <ReceivedMailList
+                                                title={currentMailbox?.name}
+                                                mailList={mailList?.detail}
+                                                onClickItem={setSelectedEmail}
+                                            />
                             }
                         </>
                 }

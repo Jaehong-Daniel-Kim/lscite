@@ -1,4 +1,5 @@
 import {
+    Button,
     Checkbox,
     Divider,
     Heading,
@@ -9,16 +10,17 @@ import {
     Text,
     VStack
 } from "@chakra-ui/react";
-import {IMailList} from "../../types";
-import React from "react";
+import {ISimpleMailObject} from "../../types";
+import React, {Dispatch, SetStateAction} from "react";
 
 interface IMailListProps {
     title: string | undefined;
-    mailList: IMailList[]| undefined;
+    mailList: ISimpleMailObject[]| undefined;
+    onClickItem: Dispatch<SetStateAction<number>>
 
 }
 
-export default function ReceivedMailList({title, mailList}: IMailListProps) {
+export default function ReceivedMailList({title, mailList, onClickItem}: IMailListProps) {
     return (
         <VStack w={"100%"} h={"100%"} >
             <HStack
@@ -69,9 +71,7 @@ export default function ReceivedMailList({title, mailList}: IMailListProps) {
                         <VStack
                             w={"100%"}
                             h={"100%"}
-                            // position={"relative"}
                             divider={<StackDivider />}
-                            // overflowY={"scroll"}
                         >
                             {
                                 mailList?.map((email, idx) => (
@@ -80,12 +80,21 @@ export default function ReceivedMailList({title, mailList}: IMailListProps) {
                                         w={"100%"}
                                         columnGap={1}
                                         justifyContent={"space-between"}
+                                        onClick={() => onClickItem(email.id)}
                                     >
                                         <Checkbox display={"flex"} justifyContent={"center"} flexBasis={"20px"} size={"md"} />
-                                        <Text textAlign={"start"} flexBasis={"30%"} fontSize={"sm"} isTruncated={true}>{email.subject}</Text>
-                                        <Text textAlign={"start"} flexBasis={"20%"} fontSize={"sm"} isTruncated={true}>
-                                            {email.sender.first_name} {email.sender.last_name}
+                                        <Text
+                                            textAlign={"start"}
+                                            flexBasis={"30%"}
+                                            fontSize={"sm"}
+                                            isTruncated={true}
+                                            fontWeight={email.read_status === "unread" ? 800 : ""}
+                                            color={email.read_status === "unread" ? "blue.500" : ""}
+                                        >{email.subject}
                                         </Text>
+                                        <Button textAlign={"start"} flexBasis={"20%"} fontSize={"xs"} size={"xs"} variant={"unstyled"} isTruncated={true}>
+                                            {email.sender.full_name}
+                                        </Button>
                                         <Text textAlign={"start"} flexBasis={"10%"} fontSize={"sm"} isTruncated={true}> {email.recipient_type} </Text>
                                         <Text textAlign={"start"} flexBasis={"10%"} fontSize={"sm"} isTruncated={true}> {email.created_datetime} </Text>
                                     </HStack>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookie from "js-cookie"
 import {
-    CheckExistenceFunc, GetAllMailBoxFunc, GetEmailListFunc,
+    CheckExistenceFunc, GetAllMailBoxFunc, GetDetailedEmailFunc, GetEmailListFunc,
     LoginFunc, NewMailboxFunc, OccupationFunc,
     PinCodeCheckFunc,
     PinCodeGenerateFunc, RemoveMailboxFunc, SearchPublicUserFunc, SendEmailFunc, SignUpFunc,
@@ -82,6 +82,17 @@ export const sendEmail: SendEmailFunc = (emailForm) => {
                 {user: recipient.user, recipient_type: recipient.recipientType}
             ))
         },
+        {headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",}
+        })
+        .then((response) => response.data)
+        .catch((error) => error.response.data)
+}
+
+
+export const getDetailedEmail: GetDetailedEmailFunc = ({queryKey}) => {
+    const [, mailId] = queryKey
+    return instance.get(
+        `emails/detail/${mailId}`,
         {headers: {"X-CSRFToken": Cookie.get("csrftoken") || "",}
         })
         .then((response) => response.data)

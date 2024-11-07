@@ -26,8 +26,8 @@ import DefaultMailbox from "./defaultMailbox";
 import CustomMailbox from "./customMailbox";
 import {FaCaretDown, FaCaretUp, FaUserTie} from "react-icons/fa";
 import {IoIosAdd} from "react-icons/io";
-import {getMailboxes, newMailBox, removeMailbox} from "../../api";
-import {useQuery, useQueryClient} from "@tanstack/react-query"
+import {newMailBox, removeMailbox} from "../../api";
+import {useQueryClient} from "@tanstack/react-query"
 import WarningAlert from "../alertModal/warningAlert";
 import ConfirmationAlert from "../alertModal/confirmationAlert";
 import {IMailbox} from "../../types";
@@ -37,6 +37,7 @@ interface ISidePanelProps {
     customMailboxes: IMailbox[] | undefined;
     currentMailbox: IMailbox | undefined;
     setCurrentMailbox: Dispatch<SetStateAction<IMailbox | undefined>>
+    resetSelected: () => void
 }
 
 
@@ -45,6 +46,7 @@ export default function SidePanelV2({
                                         customMailboxes,
                                         currentMailbox,
                                         setCurrentMailbox,
+                                        resetSelected,
                                     } : ISidePanelProps) {
     const queryClient = useQueryClient();
     // const {isLoading: isMailboxLoading, data: mailboxes} = useQuery({
@@ -215,6 +217,7 @@ export default function SidePanelV2({
                                 mailbox={mailbox}
                                 isMenuCollapsed={isMenuCollapsed}
                                 onClick={setCurrentMailbox}
+                                resetSelected={resetSelected}
                                 isActive={currentMailbox?.id === mailbox.id}
                             />
                         ))
@@ -258,6 +261,7 @@ export default function SidePanelV2({
                                         isMenuCollapsed={isMenuCollapsed}
                                         setMailboxToRemove={setMailboxToRemove}
                                         onClick={setCurrentMailbox}
+                                        resetSelected={resetSelected}
                                         isActive={currentMailbox?.id === mailbox.id}
                                     />
                                 ))

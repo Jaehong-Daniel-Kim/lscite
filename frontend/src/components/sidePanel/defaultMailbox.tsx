@@ -3,18 +3,21 @@ import {useQuery} from "@tanstack/react-query"
 import {IMailbox} from "../../types";
 import {getMailboxes} from "../../api";
 import {BsEnvelopeArrowDown, BsEnvelopeArrowUp} from "react-icons/bs";
-import {Dispatch, SetStateAction, useMemo} from "react";
+import {Dispatch, SetStateAction, useCallback, useMemo} from "react";
 import {CiFileOn} from "react-icons/ci";
+import {Simulate} from "react-dom/test-utils";
+import reset = Simulate.reset;
 
 
 interface IDefaultMailboxesProps {
     mailbox: IMailbox;
     isMenuCollapsed: boolean;
     onClick: Dispatch<SetStateAction<IMailbox | undefined>>;
+    resetSelected: () => void;
     isActive: boolean;
 }
 
-export default function DefaultMailbox({mailbox, isMenuCollapsed, onClick, isActive}: IDefaultMailboxesProps) {
+export default function DefaultMailbox({mailbox, isMenuCollapsed, onClick, resetSelected, isActive}: IDefaultMailboxesProps) {
 
     const mailboxIcons = useMemo<Record<string, any>>(() => {
         return {
@@ -23,6 +26,11 @@ export default function DefaultMailbox({mailbox, isMenuCollapsed, onClick, isAct
             drafts: CiFileOn,
         }
     }, [])
+
+    const handleClickMailbox = useCallback(() => {
+        onClick(mailbox);
+        resetSelected();
+    }, [onClick, mailbox, resetSelected])
 
     return (
         <VStack
@@ -36,7 +44,7 @@ export default function DefaultMailbox({mailbox, isMenuCollapsed, onClick, isAct
                     w={"90%"}
                     justifyContent={"center"}
                     mx={6}
-                    onClick={() => onClick(mailbox)}
+                    onClick={handleClickMailbox}
                     backgroundColor={isActive ? "gray.300" : ""}
                 >
                     {

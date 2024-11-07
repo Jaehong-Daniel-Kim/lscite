@@ -145,17 +145,31 @@ export interface ISearchPublicUser extends IAPIResponseData {
     }
 }
 
-export interface IMailList {
-    pk: number;
+export interface ISimpleMailObject {
+    id: number;
     subject: string;
     sender: IUser;
     recipient_type?: string;
+    read_status: string;
     recipients?: IRecipientDetail[];
     created_datetime: string;
 }
 
+export interface IDetailedMailObject {
+    id: number;
+    subject: string;
+    sender: IUser;
+    mail_body: string;
+    recipients: IRecipientDetail[];
+    created_datetime: string;
+}
+
 export interface IMailListResponseData extends IAPIResponseData {
-    detail: IMailList[];
+    detail: ISimpleMailObject[];
+}
+
+export interface IMailDetailResponseData extends IAPIResponseData {
+    detail: IDetailedMailObject;
 }
 
 
@@ -171,3 +185,4 @@ export type RemoveMailboxFunc = (id: number) => Promise<INewMailboxResponseData>
 export type SearchPublicUserFunc = (category: string, keyword: string, page: number) => Promise<ISearchPublicUser>;
 export type SendEmailFunc = (emailForm: IMailForm) => Promise<IAPIResponseData>;
 export type GetEmailListFunc = ({queryKey}: QueryFunctionContext) => Promise<IMailListResponseData>;
+export type GetDetailedEmailFunc = ({queryKey}: QueryFunctionContext) => Promise<IMailDetailResponseData>;

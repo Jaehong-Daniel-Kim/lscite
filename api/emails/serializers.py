@@ -51,7 +51,6 @@ class RecipientsListSerializer(serializers.ModelSerializer):
             "recipient_type",
         )
 
-
 # class ReadStatusSerializer(serializers.ModelSerializer):
 #
 #     class Meta:
@@ -76,13 +75,12 @@ class SentEmailListSerializer(serializers.ModelSerializer):
     # sender = TinyUserSerializer(read_only=True)
     sender = ProfileSerializer(read_only=True)
     created_datetime = serializers.SerializerMethodField(read_only=True)
-    # recipients = serializers.SerializerMethodField(read_only=True)
     recipients = RecipientsDetailSerializer(read_only=True, many=True)
 
     class Meta:
         model = Email
         fields = (
-            "pk",
+            "id",
             "subject",
             "sender",
             "recipients",
@@ -92,28 +90,22 @@ class SentEmailListSerializer(serializers.ModelSerializer):
     def get_created_datetime(self, instance):
         return get_created(instance)
 
-    # def get_recipients(self, instance):
-    #     try:
-    #         # user = self.context.get("request").user
-    #         return instance.recipients.all()
-    #     except ObjectDoesNotExist:
-    #         return None
-
 
 class EmailListSerializer(serializers.ModelSerializer):
 
     recipient_type = serializers.SerializerMethodField(read_only=True)
-    # sender = TinyUserSerializer(read_only=True)
     sender = ProfileSerializer(read_only=True)
     created_datetime = serializers.SerializerMethodField(read_only=True)
+    read_status = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Email
         fields = (
-            "pk",
+            "id",
             "subject",
             "sender",
             "recipient_type",
+            "read_status",
             "created_datetime"
         )
 
@@ -123,6 +115,31 @@ class EmailListSerializer(serializers.ModelSerializer):
     def get_recipient_type(self, instance):
         user = self.context.get("request").user
         return instance.recipients.get(user__username=user).recipient_type
+
+    def get_read_status(self, instance):
+        user = self.context.get("request").user
+        return instance.read_status.get(recipient__user__username=user).status
+
+
+class EmailDetailSerializer(serializers.ModelSerializer):
+
+    sender = ProfileSerializer(read_only=True)
+    created_datetime = serializers.SerializerMethodField(read_only=True)
+    recipients = RecipientsDetailSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Email
+        fields = (
+            "id",
+            "subject",
+            "sender",
+            "mail_body",
+            "recipients",
+            "created_datetime"
+        )
+
+    def get_created_datetime(self, instance):
+        return get_created(instance)
 
 
 class NewEmailSerializer(serializers.ModelSerializer):

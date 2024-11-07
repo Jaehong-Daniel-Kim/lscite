@@ -10,7 +10,7 @@ import {
     Box, MenuList, MenuItem, Portal, useDisclosure
 } from "@chakra-ui/react";
 import {BsDot, BsThreeDots} from "react-icons/bs";
-import {Dispatch, SetStateAction, useState} from "react";
+import {Dispatch, SetStateAction, useCallback, useState} from "react";
 import {IMailbox} from "../../types";
 
 interface ICustomMailboxProps {
@@ -19,6 +19,7 @@ interface ICustomMailboxProps {
     isMenuCollapsed: boolean;
     setMailboxToRemove: Dispatch<SetStateAction<number>>
     onClick: Dispatch<SetStateAction<IMailbox | undefined>>
+    resetSelected: () => void;
     isActive: boolean
 }
 export default function CustomMailbox({
@@ -26,11 +27,17 @@ export default function CustomMailbox({
                                           isMenuCollapsed,
                                           setMailboxToRemove,
                                           onClick,
+                                          resetSelected,
                                           isActive,
                                       }: ICustomMailboxProps)
 {
     const {isOpen, onClose, onOpen} = useDisclosure();
     const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
+
+    const handleClickMailbox = useCallback(() => {
+        onClick(mailbox);
+        resetSelected();
+    }, [onClick, mailbox, resetSelected])
 
     return (
         <HStack
@@ -42,7 +49,7 @@ export default function CustomMailbox({
             columnGap={2}
             w={"85%"}
             _hover={{cursor: "pointer", backgroundColor: "gray.200"}}
-            onClick={() => onClick(mailbox)}
+            onClick={handleClickMailbox}
             backgroundColor={isActive ? "gray.200" : ""}
         >
             {

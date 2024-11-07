@@ -12,7 +12,7 @@ from users.models import User
 from postboxes.models import Postbox
 from .serializers import (
     EmailListSerializer, NewEmailSerializer, RecipientsListSerializer,
-    SentEmailListSerializer
+    SentEmailListSerializer, EmailDetailSerializer
 )
 
 # Create your views here.
@@ -89,6 +89,31 @@ class EmailListByMailbox(APIView):
             "message": "error authenticating",
             "detail": {},
         })
+
+
+class EmailDetail(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get_email(self, pk):
+        return Email.objects.get(pk=pk)
+
+    def get(self, request, pk):
+        user = request.user
+        email = self.get_email(pk)
+        if len(email.recipients.filter(user__username=user).distinct()):
+            serializer = EmailDetailSerializer(email)
+            return Response({
+                "status": "success",
+                "message": "data fetch successful",
+                "detail": serializer.data
+            })
+        return Response({
+            "status": "error",
+            "message": "something is wrong",
+            "detail": {},
+        })
+
 
 
 # class EmailDetails(APIView):
